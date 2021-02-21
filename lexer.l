@@ -15,6 +15,7 @@ digit [0-9]
 "integer"              { return INTEGER; }
 "char"                 { return CHAR; }
 "float"                 { return FLOAT; }
+
 {letter_}({letter_}|{digit})*    	        {strcpy(yylval.string, yytext); return ID; }
 {digit}+ 		                        {yylval.number= atoi(yytext); return NUM;}
 

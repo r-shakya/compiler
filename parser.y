@@ -15,7 +15,7 @@ int yydebug=1;
 %type <number> NUM
 %type <string> ID
 %type <number> expr
-%type <number> decl
+%type <string> decl
 
 %right '='
 %left '+' '-'
@@ -31,10 +31,10 @@ declarations: decl ';'    {}
     | declarations decl ';' {}
     ;
 
-decl: INTEGER ID               {  }
-    | CHAR ID     {  }
-    | FLOAT ID     {  }
-    | decl ',' ID     {  }
+decl: INTEGER ID               {strcpy($$,"integer"); printf("integer %s\n",$2); }
+    | CHAR ID     {strcpy($$,"char"); printf("char %s\n",$2); }
+    | FLOAT ID     {strcpy($$,"float"); printf("float %s\n",$2); }
+    | decl ',' ID     { printf("%s %s\n",$$,$3); }
     ;
 
 statements: expr ';'    {printf("%d\n",$1);}
