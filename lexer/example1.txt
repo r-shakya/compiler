@@ -1,0 +1,15 @@
+integer nsum(integer a[]){
+integer s,i;
+s=0;
+for(i=0;i<10;i++){
+s=s+a[i];
+}
+return s;
+}
+
+start:
+integer sum = 0;
+integer a[5]={2,1,4,3,5};
+sum = call("nsum",a);
+output(sum);
+end;

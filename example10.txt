@@ -1,0 +1,13 @@
+start:
+integer a;
+input(a);
+if(a==4){
+output("if is working a==",a);
+}
+elif(a>1){
+output("elif is working a==",a);
+}
+else{
+output("else is working a==",a);
+}
+end;

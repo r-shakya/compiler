@@ -1,0 +1,5 @@
+start:
+integer a;
+input(a);
+output(a);
+end;
