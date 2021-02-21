@@ -58,10 +58,3 @@ id in arithmetic expr = i
 sum = 0
 for statement executed 
 
-number 1 added as parameter
-a = send of sumofnumber
-number 1 added as parameter
-number 2 added as parameter
-a = send of sumofnumber
-1 + 2
-return from function 3

@@ -60,9 +60,7 @@ extern int yydebug;
     ELSE = 266,
     WHILE = 267,
     FOR = 268,
-    VOID = 269,
-    CALL = 270,
-    SEND = 271
+    SEND = 269
   };
 #endif
 /* Tokens.  */
@@ -77,9 +75,7 @@ extern int yydebug;
 #define ELSE 266
 #define WHILE 267
 #define FOR 268
-#define VOID 269
-#define CALL 270
-#define SEND 271
+#define SEND 269
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
@@ -90,7 +86,7 @@ union YYSTYPE
 	 int  number;
 	 char string[15];
 
-#line 94 "y.tab.h"
+#line 90 "y.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;

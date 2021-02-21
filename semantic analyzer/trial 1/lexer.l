@@ -15,13 +15,11 @@ digit [0-9]
 "integer"              { return INTEGER; }
 "char"                 { return CHAR; }
 "float"                { return FLOAT; }
-"void"                 { strcpy(yylval.string, yytext); return VOID; }
+"void"                 { strcpy(yylval.string, yytext); return SEND; }
 "if"                   { return IF; }
 "else"                 { return ELSE; }
 "while"                { return WHILE; }
 "for"                  { return FOR; }
-"call"                 { return CALL; }
-"send"                 { return SEND; }
 
 {letter_}({letter_}|{digit})*    	        {strcpy(yylval.string, yytext); return ID; }
 {digit}+ 		                        {yylval.number= atoi(yytext); return NUM;}

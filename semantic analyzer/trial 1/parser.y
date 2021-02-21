@@ -10,11 +10,11 @@ int yydebug=1;
 	 char string[15];
 }
 
-%token NUM ID START END INTEGER CHAR FLOAT IF ELSE WHILE FOR VOID CALL SEND
+%token NUM ID START END INTEGER CHAR FLOAT IF ELSE WHILE FOR SEND
 
 %type <number> NUM
 %type <string> ID
-%type <string> VOID
+%type <string> SEND
 %type <number> expr assignexpr logicalexpr
 %type <string> decl arraylist
 
@@ -30,7 +30,7 @@ program: declarations START ':' statements END ';';
             
 declarations: decl ';'    {}
     | declarations decl ';' {}
-    | declarations VOID ID '(' decl ')' '{' statements '}' { printf("%s function executed with send-type %s \n\n",$3,$2); }
+    | declarations SEND ID '(' decl ')' '{' statements '}' { printf("%s function executed with send-type %s \n\n",$3,$2); }
     ;
 
 decl: INTEGER ID               {strcpy($$,"integer"); printf("var type integer = %s\n",$2); }
@@ -45,29 +45,19 @@ decl: INTEGER ID               {strcpy($$,"integer"); printf("var type integer =
 
 statements: assignexpr ';'                                                                {}
     | statements assignexpr ';'                                                           {}
-    | statements returnstmt ';'                                                           {}
     | statements IF '(' logicalexpr ')' '{' statements '}'                                { printf("only if statement executed \n"); }
     | statements IF '(' logicalexpr ')' '{' statements '}' ELSE '{' statements '}'        { printf("if-else statement executed \n\n"); }
     | statements WHILE '(' logicalexpr ')' '{' statements '}'                             { printf("while statement executed \n\n"); }
     | statements FOR '(' assignexpr ';' logicalexpr ';' assignexpr ')' '{' statements '}' { printf("for statement executed \n\n"); }
     ;
-    
-returnstmt: SEND expr                                                       { printf("return from function %d\n",$2); }
-          ;
 
-assignexpr: ID '=' expr                                                     { printf("%s = %d\n",$1,$3); }
-          | ID '=' CALL '(' '"' ID '"' ',' paramlist ')'                    { printf("%s = send of %s\n",$1,$6); }
-          | ID '[' NUM ']' '=' expr                                         { printf("%s[%d] = %d\n",$1,$3,$6); }
-          | ID '[' NUM ']' '=' CALL '(' '"' ID '"' ',' paramlist ')'        { printf("%s[%d] = send of %s\n",$1,$3,$9); }
-          | ID '[' NUM ']' '=' '{' arraylist '}'                            { printf("%s[%d] = {.....}\n",$1,$3); }
+assignexpr: ID '=' expr                                { printf("%s = %d\n",$1,$3); }
+          | ID '[' NUM ']' '=' expr                    { printf("%s[%d] = %d\n",$1,$3,$6); }
+          | ID '[' NUM ']' '=' '{' arraylist '}'       { printf("%s[%d] = {.....}\n",$1,$3); }
           ;
           
 arraylist: NUM                { printf("number %d added in array\n",$1); }
          | arraylist ',' NUM  { printf("number %d added in array\n",$3); }
-         ;
-         
-paramlist: NUM                { printf("number %d added as parameter\n",$1); }
-         | paramlist ',' NUM  { printf("number %d added as parameter\n",$3); }
          ;
 
 expr: NUM                     { $$ = $1; }
