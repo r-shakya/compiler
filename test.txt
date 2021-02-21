@@ -1,4 +1,9 @@
-31-dec-2019;
-1-dec-2013;
-29-feb-2016;
-29-feb-2017;
+char c;
+integer a,b;
+float f,g;
+start
+1+2;
+2-1;
+2/1;
+2*1;
+end

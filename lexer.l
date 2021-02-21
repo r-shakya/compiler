@@ -7,20 +7,25 @@ int lineno = 1;
 void printMSG(char *token_type);
 void lexer_error(char *message);
 %}
-alpha [A-Za-z]
+letter_ [A-Za-z_]
 digit [0-9]
 %%
-{alpha}+    	        {strcpy(yylval.string, yytext); return str; }
-{digit}+ 		{yylval.number= atoi(yytext); return num;}
+"start"	       { return START; }
+"end"	               { return END; }
+"integer"              { return INTEGER; }
+"char"                 { return CHAR; }
+"float"                 { return FLOAT; }
+{letter_}({letter_}|{digit})*    	        {strcpy(yylval.string, yytext); return ID; }
+{digit}+ 		                        {yylval.number= atoi(yytext); return NUM;}
 
-"&"      		{ return '&'; }
-"|"      		{ return '|'; }
-"^"	 			{ return '^'; }
-"~"     		{ return '~'; }
-"("				{ return '('; }
-")"				{ return ')'; }
-";"				{ return ';'; }
-[ \t\n]         { ; }
+"+"      		{ return '+'; }
+"-"      		{ return '-'; }
+"*"	 	        { return '*'; }
+"/"                     { return '/'; }
+"("                     { return '('; }
+")"                     { return ')'; }
+";"		        { return ';'; }
+[ \t\n]                 { ; }
 "$"		        { return 0; }
 .  		        { return yytext[0]; }
 %%

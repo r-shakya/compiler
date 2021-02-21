@@ -10,27 +10,46 @@ int yydebug=1;
 	 char string[15];
 }
 
-%token num str
+%token NUM ID START END INTEGER CHAR FLOAT
 
-%type <number> D 
-%type <string> M 
-%type <number> Y 
-%type <string> date
-%type <number> num
-%type <string> str
+%type <number> NUM
+%type <string> ID
+%type <number> expr
+%type <number> decl
 
+%right '='
+%left '+' '-'
+%left '*' '/'
+%left '(' ')'
 
+%start program
 %%
 
-dates: dates date ';' | date ';' {};
+program: declarations START statements END;
+            
+declarations: decl ';'    {}
+    | declarations decl ';' {}
+    ;
 
-date: D '-' M '-' Y { if(checkDate($1,$3,$5)){printf("%d-%s-%d\n", $1, $3, $5);yydebug=1;}else{printf("Not Valid\n");}}
+decl: INTEGER ID               {  }
+    | CHAR ID     {  }
+    | FLOAT ID     {  }
+    | decl ',' ID     {  }
+    ;
 
-D: num				{ $$ = $1; }; 	
+statements: expr ';'    {printf("%d\n",$1);}
+    | statements expr ';' {printf("%d\n",$2);}
+    ;
 
-M: str				{strcpy($$, $1);};
+expr: NUM               { $$ = $1; }
+    | expr '+' expr     { $$ = $1 + $3; printf("%d + %d\n",$1,$3); }
+    | expr '-' expr     { $$ = $1 - $3; printf("%d - %d\n",$1,$3); }
+    | expr '*' expr     { $$ = $1 * $3; printf("%d * %d\n",$1,$3); }
+    | expr '/' expr     { $$ = $1 / $3; printf("%d / %d\n",$1,$3); }
+    | '(' expr ')'      { $$ =  $2; printf("( %d )\n",$2); }
+    ;
 
-Y: num				{$$ = $1;};
+
 
 
 %%

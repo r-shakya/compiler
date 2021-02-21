@@ -49,13 +49,23 @@ extern int yydebug;
 # define YYTOKENTYPE
   enum yytokentype
   {
-    num = 258,
-    str = 259
+    NUM = 258,
+    ID = 259,
+    START = 260,
+    END = 261,
+    INTEGER = 262,
+    CHAR = 263,
+    FLOAT = 264
   };
 #endif
 /* Tokens.  */
-#define num 258
-#define str 259
+#define NUM 258
+#define ID 259
+#define START 260
+#define END 261
+#define INTEGER 262
+#define CHAR 263
+#define FLOAT 264
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
@@ -66,7 +76,7 @@ union YYSTYPE
 	 int  number;
 	 char string[15];
 
-#line 70 "y.tab.h"
+#line 80 "y.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;
