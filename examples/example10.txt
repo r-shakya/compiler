@@ -1,4 +1,4 @@
-start:
+void main(){
 integer a;
 input(a);
 if(a==4){
@@ -10,4 +10,4 @@ output("elif is working a==",a);
 else{
 output("else is working a==",a);
 }
-end;
+}

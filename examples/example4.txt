@@ -1,5 +1,5 @@
-start:
+void main(){
 integer a;
 a=5;
 output(a);
-end;
+}

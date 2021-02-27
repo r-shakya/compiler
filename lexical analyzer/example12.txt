@@ -2,8 +2,8 @@ void decl(){
 integer b;
 float g;
 }
-start:
+void main(){
 integer a;
 float f;
 call("decl");
-end;
+}

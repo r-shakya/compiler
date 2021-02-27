@@ -7,9 +7,9 @@ s=s+a[i];
 return s;
 }
 
-start:
+void main(){
 integer sum = 0;
 integer a[5]={2,1,4,3,5};
 sum = call("nsum",a);
 output(sum);
-end;
+}

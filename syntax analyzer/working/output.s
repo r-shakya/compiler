@@ -5,7 +5,7 @@ array type integer elements 3 = arr1
 var type float = f
 array type float elements 4 = arr2
 var type float = g
-array type integer elements 5 = arr3
+array type integer  elements 5 = arr3
 var type integer = d
 var type integer = e
 var type integer = a
@@ -15,7 +15,10 @@ id in arithmetic expr = b
 c = 0
 id in arithmetic expr = c
 a[1] = 0
-sumofnumber function executed with send-type void 
+id in arithmetic expr = c
+0 + 1
+return from function 1
+sumofnumber function executed with send-type integer 
 
 number 1 added in array
 number 2 added in array
@@ -63,5 +66,4 @@ a = send of sumofnumber
 number 1 added as parameter
 number 2 added as parameter
 a = send of sumofnumber
-1 + 2
-return from function 3
+main function executed

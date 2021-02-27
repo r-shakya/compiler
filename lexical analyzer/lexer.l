@@ -10,7 +10,7 @@
 digit        [0-9]
 digits       [0-9]+
 letter_      [A-Za-z_]
-keyword      boolean|char|integer|float|if|elif|else|while|for|continue|break|void|send|begin|end
+keyword      boolean|char|integer|float|if|elif|else|while|for|continue|break|void|send|void|main
 
 %%
 {keyword}      	                             { printMSG("keyword"); }
@@ -77,7 +77,7 @@ void yyerror(char *message){
 int main(int argc,char *argv[]){
 
 if(argc!=2){
-printf("Usage: <./a> <source file> \n");
+printf("Usage: <./mylexer> <source file> \n");
 exit(0);
 }
 

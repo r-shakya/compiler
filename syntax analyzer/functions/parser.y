@@ -10,13 +10,13 @@ int yydebug=1;
 	 char string[15];
 }
 
-%token NUM ID START END INTEGER CHAR FLOAT IF ELSE WHILE FOR VOID CALL SEND
+%token NUM ID START END INTEGER CHAR FLOAT IF ELSE WHILE FOR VOID CALL SEND typestr
 
 %type <number> NUM
 %type <string> ID
 %type <string> VOID
 %type <number> expr assignexpr logicalexpr
-%type <string> decl arraylist
+%type <string> decl arraylist typestr
 
 %right '='
 %left '+' '-'
@@ -31,14 +31,11 @@ program: declarations START ':' statements END ';';
 declarations: decl ';'    {}
     | declarations decl ';' {}
     | declarations VOID ID '(' decl ')' '{' statements '}' { printf("%s function executed with send-type %s \n\n",$3,$2); }
+    | declarations typestr ID '(' decl ')' '{' statements '}' { printf("%s function executed with send-type %s \n\n",$3,$2); }
     ;
 
-decl: INTEGER ID               {strcpy($$,"integer"); printf("var type integer = %s\n",$2); }
-    | INTEGER ID '[' NUM ']'   {strcpy($$,"integer"); printf("array type integer elements %d = %s\n",$4,$2); }
-    | CHAR ID                  {strcpy($$,"char"); printf("var type char = %s\n",$2); }
-    | CHAR ID '[' NUM ']'      {strcpy($$,"char"); printf("array type char elements %d = %s\n",$4,$2); }
-    | FLOAT ID                 {strcpy($$,"float"); printf("var type float = %s\n",$2); }
-    | FLOAT ID '[' NUM ']'     {strcpy($$,"float"); printf("array type float elements %d = %s\n",$4,$2); }
+decl: typestr ID               {strcpy($$,$1); printf("var type %s = %s\n",$1,$2); }
+    | typestr ID '[' NUM ']'   {strcpy($$,$1); printf("array type %s  elements %d = %s\n",$1,$4,$2); }
     | decl ',' ID              { printf("var type %s = %s\n",$$,$3); }
     | decl ',' ID '[' NUM ']'  { printf("array type %s elements %d = %s\n",$$,$5,$3); }
     ;

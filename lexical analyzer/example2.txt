@@ -1,4 +1,4 @@
-start:
+void main(){
 integer a,b,c;
 float f,g,h;
-end;
+}
