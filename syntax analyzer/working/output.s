@@ -24,6 +24,8 @@ number 1 added in array
 number 2 added in array
 number 3 added in array
 a[3] = {.....}
+var type integer = var1
+var type integer = var2
 a = 1
 f = 2
 2 + 1

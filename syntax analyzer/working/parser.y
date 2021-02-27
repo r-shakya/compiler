@@ -43,12 +43,13 @@ decl: typestr ID               {strcpy($$,$1); printf("var type %s = %s\n",$1,$2
 
 statements: assignexpr ';'                                                                {}
     | statements assignexpr ';'                                                           {}
+    | statements decl ';'                                                                 {}
     | statements returnstmt ';'                                                           {}
     | statements IF '(' logicalexpr ')' '{' statements '}'                                { printf("only if statement executed \n"); }
     | statements IF '(' logicalexpr ')' '{' statements '}' ELSE '{' statements '}'        { printf("if-else statement executed \n\n"); }
     | statements WHILE '(' logicalexpr ')' '{' statements '}'                             { printf("while statement executed \n\n"); }
     | statements FOR '(' assignexpr ';' logicalexpr ';' assignexpr ')' '{' statements '}' { printf("for statement executed \n\n"); }
-    ;
+    | ;
     
 returnstmt: SEND expr                                                       { printf("return from function %d\n",$2); }
           ;
