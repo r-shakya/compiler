@@ -1,6 +1,7 @@
 %{
 #include "functions.h"
-//#include "symboltable.c"
+#include "symboltable.c"
+#include <stdbool.h>
   //initialize_sym();
   
 int yylex();
@@ -29,27 +30,27 @@ int yydebug=1;
 %start program
 %%
 
-program: declarations VOID MAIN '(' ')' '{' statements '}' {printf("main function executed");}
+program: declarations VOID MAIN { temproot1 = lift_scope( temproot1 );  } '(' ')' '{' statements '}' {printf("main function executed");}
        ;
             
-declarations: decl ';'      {}
-    | declarations decl ';' {}
-    | declarations VOID ID '(' decl ')' '{' statements '}'    { printf("%s function executed with send-type %s \n\n",$3,$2); }
-    | declarations typestr ID '(' decl ')' '{' statements '}' { printf("%s function executed with send-type %s \n\n",$3,$2); }
+declarations: decl ';'      {  }
+    | declarations decl ';' {  }
+    | declarations VOID ID { temproot1 = change_scope( temproot1 ); } '(' decl ')' '{' statements '}'    { display( temproot1 ); temproot1 = temproot1->parent_scope;    printf("%s function executed with send-type %s \n\n",$3,$2); }
+    | declarations typestr ID { temproot1 = change_scope( temproot1 ); } '(' decl ')' '{' statements '}' { display( temproot1 ); temproot1 = temproot1->parent_scope;   printf("%s function executed with send-type %s \n\n",$3,$2); }
     ;
 
-decl: typestr ID               {strcpy($$,$1); printf("var type %s = %s\n",$1,$2);  }
-    | typestr ID '[' NUM ']'   {strcpy($$,$1); printf("array type %s  elements %d = %s\n",$1,$4,$2); }
-    | decl ',' ID              { printf("var type %s = %s\n",$$,$3); }
-    | decl ',' ID '[' NUM ']'  { printf("array type %s elements %d = %s\n",$$,$5,$3); }
+decl: typestr ID               {strcpy($$,$1); printf("var type %s = %s\n",$1,$2); if( lookup( temproot1 , $2  ) ){ printf("Variable named %s exists already\n ",$2); exit( 0 ); } else{  insert( temproot1 , symbol_copy( $2 ,"" ,$1  )  );  } }
+    | typestr ID '[' NUM ']'   {strcpy($$,$1); printf("array type %s  elements %d = %s\n",$1,$4,$2); if( lookup( temproot1 , $2  ) ){ printf("Variable named %s exists already\n ",$2); exit( 0 ); }   else{  insert_array( temproot1 , symbol_copy( $2 ,"" ,$1  ) , $4 );  } }
+    | decl ',' ID              { printf("var type %s = %s\n",$$,$3); if( lookup( temproot1 , $3 ) ){ printf( "variable named %s exists already", $3 ); exit(0);  }  else{ insert( temproot1 , symbol_copy( $3 ,"" ,$$  )  ); } }
+    | decl ',' ID '[' NUM ']'  { printf("array type %s elements %d = %s\n",$$,$5,$3); if( lookup( temproot1 , $3 ) ){ printf( "variable named %s exists already", $3 ); exit(0);  }  else{ insert_array( temproot1 , symbol_copy( $3 ,"" ,$$  ) , $5 );   } }
     ;
 
 statements: assignexpr ';'                                                                {}
     | statements assignexpr ';'                                                           {}
     | statements decl ';'                                                                 {}
     | statements returnstmt ';'                                                           {}
-    | statements IF '(' logicalexpr ')' '{' statements '}'                                { printf("only if statement executed \n"); }
-    | statements IF '(' logicalexpr ')' '{' statements '}' ELSE '{' statements '}'        { printf("if-else statement executed \n\n"); }
+    | statements IF '(' logicalexpr ')' { temproot1 = change_scope( temproot1 ); } '{' statements '}'                                { /*display( temproot1 ); temproot1 = temproot1->parent_scope;*/  printf("only if statement executed \n"); }
+   // | statements IF '(' logicalexpr ')' '{' statements '}' ELSE '{' statements '}'        { printf("if-else statement executed \n\n"); }
     | statements WHILE '(' logicalexpr ')' '{' statements '}'                             { printf("while statement executed \n\n"); }
     | statements FOR '(' assignexpr ';' logicalexpr ';' assignexpr ')' '{' statements '}' { printf("for statement executed \n\n"); }
     | ;
@@ -97,9 +98,9 @@ logicalexpr: NUM                      { $$ = $1; }
 //extern struct Scope_node* root ;
 //extern struct Scope_node* temproot;
 int main(int argc,char *argv[]){
-  //initialize_sym();
+  initialize_sym();
   yyparse();
-  
+  display( temproot1 );
   return 0;
 }
 
