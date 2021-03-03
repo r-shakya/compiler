@@ -216,11 +216,11 @@ bool lookup( struct Scope_node* root , char *name ){
 					if( temp->ID_Name[i] != name[i] ){
 						isequal = false;
 					}
-					//printf("\n \n %c  %c \n \n", temp->ID_Name[i]  , name[i] );
+					printf("\n \n %c  %c \n \n", temp->ID_Name[i]  , name[i] );
 					i++;
 				}
 				
-				//printf("\n \n string id  %s  \n \n",name);
+				printf("\n \n string id  %s  \n \n",name);
 				if( isequal ){
 					return true;
 				}
@@ -233,6 +233,17 @@ bool lookup( struct Scope_node* root , char *name ){
 		return false;
         }
 
+}
+
+bool lookup_for_id( struct Scope_node* root , char *name){
+	while(root){
+	printf("1st scope \n");
+		if(lookup(root , name)){
+			return true;
+		}
+		root = root->parent_scope;
+	}
+	return false;
 }
 
 
