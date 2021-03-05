@@ -13,6 +13,7 @@ struct data_node {
     char ID_Name[20];                  // Name string
     char  data_type[15];     	        // Data_Type       0 -> int , 1 -> char , 2 -> bool , 3 ->float
     char ID_Value[10];			// Value in String
+    char **list;
     struct data_node *next;
 };
 
@@ -30,6 +31,7 @@ struct Scope_node* newScope_node()
     }
     return (Scope_node);
 }
+
 
 
 
@@ -125,6 +127,8 @@ struct data_node* symbol_copy(char *idname , char *idvalue , char *idtype){
     struct data_node* symbol = (struct data_node*) malloc(sizeof(struct data_node));
     strcpy( symbol->data_type , idtype );
     strcpy( symbol->ID_Name , idname );
+    
+    //for(int i=0;i<)
     strcpy( symbol->ID_Value, idvalue );
     //symbol->data_type = idtype;
     //symbol->ID_Name = idname;  //(char *)malloc(sizeof(char)*5);
@@ -172,15 +176,68 @@ void insert_array(struct Scope_node* root , struct data_node* temp1 , int num ){
         root->total_data++;
 }
 
+struct data_node* insert_function(struct Scope_node* root , struct data_node* temp1 ){
+	if(root->total_data == root->symb_tbl_size){ 
+		symb_table_doubling(root);
+	}
+        char *name = temp1->ID_Name;
+        strcat(temp1->data_type, "function");
+        int size_ = 4;
+        temp1->list = (char**) malloc(size_ * sizeof(temp1->ID_Name ));
+        //sprintf(temp1->ID_Value, "%d", num);
+
+        long int name_len = strlen(name);
+        int sum_ = 0; int mul = 1;
+        for(int j=0;j<name_len;j++){
+        	sum_ = sum_ +  ((int)name[j]*mul) % root->symb_tbl_size;
+        	mul *= 2; 
+        }
+        sum_ = sum_ % root->symb_tbl_size;
+        struct data_node *temp_ar = root->symbol_table[sum_];
+        if(root->symbol_table[sum_]  != NULL){
+       	struct data_node *temp = root->symbol_table[sum_];
+        	while(temp->next != NULL){
+        		temp = temp->next;
+        	}
+        	temp->next = temp1;
+        	temp_ar = temp1;
+        	
+        }
+	else{
+		root->symbol_table[sum_] = temp1;
+		temp_ar = temp1;
+        } 
+        
+        root->total_data++;
+        return temp1;
+}
+
+void insert_func_param( struct data_node* temp , char* paramtype ){
+        	int i = 0;
+        	while(temp->list[i] == NULL){
+        		i++;
+        	}
+        	if(i == 4){
+        		printf("NOT MORE THAN 4 PARAMETERS CAN BE DEFINED IN FUNCTION");
+        		exit(0);
+        	}
+        	strcpy(temp->list[i] , paramtype);
+        
+}
 
 struct Scope_node* root1 ;
 struct Scope_node* temproot1;
+
+//struct Scope_node* funcroot1 ;
+//struct Scope_node* functemproot1;
  // struct Scope_node* root = newScope_node();
 // struct Scope_node* temproot = root;
 
 void initialize_sym(){
 	root1 = newScope_node();
 	temproot1 = root1;
+	//funcroot1 = newScope_node();
+	//functemproot1 = funcroot1;
 }
 
 struct Scope_node* change_scope(struct Scope_node* root ){

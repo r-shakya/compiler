@@ -36,7 +36,7 @@ program: declarations VOID MAIN { /*temproot1 = lift_scope( temproot1 ); */ temp
 declarations: decl ';'      {  }
     | declarations decl ';' {  }
     | declarations VOID ID { temproot1 = change_scope( temproot1 ); } '(' decl ')' '{' statements '}'    { display( temproot1 ); temproot1 = temproot1->parent_scope;    printf("%s function executed with send-type %s \n\n",$3,$2); }
-    | declarations typestr ID { temproot1 = change_scope( temproot1 ); } '(' decl ')' '{' statements '}' { display( temproot1 ); temproot1 = temproot1->parent_scope;   printf("%s function executed with send-type %s \n\n",$3,$2); }
+    | declarations typestr ID { temproot1 = change_scope( temproot1 ); } '(' decl ')' '{' statements '}' { display( temproot1 ); temproot1 = temproot1->parent_scope;   printf("%s function executed with send-type %s \n\n",$3,$2); } 
     ;
 
 decl: typestr ID               {strcpy($$,$1); printf("var type %s = %s\n",$1,$2); if( lookup( temproot1 , $2  ) ){ printf("Variable named %s exists already\n ",$2); exit( 0 ); } else{  insert( temproot1 , symbol_copy( $2 ,"" ,$1  )  );  } }
