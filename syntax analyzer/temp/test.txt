@@ -1,0 +1,50 @@
+char c;
+integer a,b,arr1[3];
+float f,arr2[4],g;
+integer arr3[5],d,e;
+
+integer sumofnumber(integer a)
+{
+c=a+b;
+a[1]=c;
+send c+1;
+}
+
+void main(){
+a[3]={1,2,3};
+integer var1,var2;
+a=1;
+f=2;
+b=2+1;
+g=3+2;
+sum=a+b;
+
+if(1<2)
+{
+    sum=2;
+}
+
+if(3<4)
+{
+    sum=4;
+}
+else
+{
+   sum=5;
+}
+
+while(a<5)
+{
+   a=a+1;
+}
+
+for(i=1;i<5;i=i+1)
+{
+   sum=sum+i;
+}
+
+a=call("sumofnumber",1);
+
+a=call("sumofnumber",1,2);
+
+}
