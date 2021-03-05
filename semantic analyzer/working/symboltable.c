@@ -12,7 +12,7 @@ struct Scope_node {
 struct data_node {
     char ID_Name[20];                  // Name string
     char  data_type[15];     	        // Data_Type       0 -> int , 1 -> char , 2 -> bool , 3 ->float
-    char *ID_Value;			// Value in String
+    char ID_Value[10];			// Value in String
     struct data_node *next;
 };
 

@@ -40,9 +40,11 @@ declarations: decl ';'      {  }
     ;
 
 decl: typestr ID               {strcpy($$,$1); printf("var type %s = %s\n",$1,$2); if( lookup( temproot1 , $2  ) ){ printf("Variable named %s exists already\n ",$2); exit( 0 ); } else{  insert( temproot1 , symbol_copy( $2 ,"" ,$1  )  );  } }
+    | typestr ID '=' NUM       {strcpy($$,$1); printf("var type %s : %s = %d\n",$1,$2,$4); if( lookup( temproot1 , $2  ) ){ printf("Variable named %s exists already\n ",$2); exit( 0 ); } else{  insert( temproot1 , symbol_copy( $2 ,"" ,$1  )  );  } }
     | typestr ID '[' NUM ']'   {strcpy($$,$1); printf("array type %s  elements %d = %s\n",$1,$4,$2); if( lookup( temproot1 , $2  ) ){ printf("Variable named %s exists already\n ",$2); exit( 0 ); }   else{  insert_array( temproot1 , symbol_copy( $2 ,"" ,$1  ) , $4 );  } }
     | typestr ID '[' NUM ']' '=' '{' arraylist '}'   {strcpy($$,$1); printf("array type %s  elements %d = %s\n",$1,$4,$2); printf("%s[%d] = {.....}\n",$2,$4); if( lookup( temproot1 , $2  ) ){ printf("Variable named %s exists already\n ",$2); exit( 0 ); }   else{  insert_array( temproot1 , symbol_copy( $2 ,"" ,$1  ) , $4 );  } }
     | decl ',' ID              { printf("var type %s = %s\n",$$,$3); if( lookup( temproot1 , $3 ) ){ printf( "variable named %s exists already", $3 ); exit(0);  }  else{ insert( temproot1 , symbol_copy( $3 ,"" ,$$  )  ); } }
+    | decl ',' ID '=' NUM      { printf("var type %s : %s = %d\n",$$,$3,$5); if( lookup( temproot1 , $3 ) ){ printf( "variable named %s exists already", $3 ); exit(0);  }  else{ insert( temproot1 , symbol_copy( $3 ,"" ,$$  )  ); } }
     | decl ',' ID '[' NUM ']'  { printf("array type %s elements %d = %s\n",$$,$5,$3); if( lookup( temproot1 , $3 ) ){ printf( "variable named %s exists already", $3 ); exit(0);  }  else{ insert_array( temproot1 , symbol_copy( $3 ,"" ,$$  ) , $5 );   } }
     | decl ',' ID '[' NUM ']' '=' '{' arraylist '}'  { printf("array type %s elements %d = %s\n",$$,$5,$3); printf("%s[%d] = {.....}\n",$3,$5); if( lookup( temproot1 , $3 ) ){ printf( "variable named %s exists already", $3 ); exit(0);  }  else{ insert_array( temproot1 , symbol_copy( $3 ,"" ,$$  ) , $5 );   } }
     ;

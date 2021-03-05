@@ -16,7 +16,7 @@ void main(){
 	integer a[3]={1,2,3};
 	integer var1,var2;
 	a=1;
-	integer i = 10;
+	integer var3=10;
 	b=2+1;
 	g=3+2;
 	sum=a+b;
