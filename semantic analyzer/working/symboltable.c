@@ -11,7 +11,7 @@ struct Scope_node {
 
 struct data_node {
     char ID_Name[20];                  // Name string
-    char  data_type[8];     	        // Data_Type       0 -> int , 1 -> char , 2 -> bool , 3 ->float
+    char  data_type[15];     	        // Data_Type       0 -> int , 1 -> char , 2 -> bool , 3 ->float
     char ID_Value[15];			// Value in String
     struct data_node *next;
 };
@@ -138,6 +138,11 @@ void insert_array(struct Scope_node* root , struct data_node* temp1 , int num ){
 		symb_table_doubling(root);
 	}
         char *name = temp1->ID_Name;
+        strcat(temp1->data_type, "array");
+        
+        sprintf(temp1->ID_Value, "%d", num);
+        
+        //temp1->ID_Value
         long int name_len = strlen(name);
         int sum_ = 0; int mul = 1;
         for(int j=0;j<name_len;j++){
@@ -159,11 +164,11 @@ void insert_array(struct Scope_node* root , struct data_node* temp1 , int num ){
 		root->symbol_table[sum_] = temp1;
 		temp_ar = temp1;
         } 
-        num--;
+        /*num--;
         for(int count = 0;count < num;count++){ 
 		temp_ar->next = symbol_copy( temp1->ID_Name ,"" ,temp1->data_type  );
 		temp_ar = temp_ar->next;
-     	}
+     	}*/
         root->total_data++;
 }
 
