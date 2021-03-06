@@ -13,6 +13,7 @@ struct data_node {
     char ID_Name[20];                  // Name string
     char  data_type[15];     	        // Data_Type       0 -> int , 1 -> char , 2 -> bool , 3 ->float
     char ID_Value[10];			// Value in String
+    char ID_Var[10];                  // array or integer
     char **list;
     struct data_node *next;
 };
@@ -80,20 +81,45 @@ void symb_table_doubling(struct Scope_node* root){
 
 
 void display(struct Scope_node* root){
-	printf("//////////////////////////////////////\n");
+	printf("\n------------------------------------------SYMBOL-TABLE-------------------------------------------------------\n");
+	printf("-------------------------------------------------------------------------------------------------------------\n");
+	printf("-IDENTIFIER-NAME--------------DATA-TYPE------------------IDENTIFIER-VALUE------------------------------------\n");
+	printf("-------------------------------------------------------------------------------------------------------------\n");
 	for(int i=0;i<root->symb_tbl_size;i++){
     	if(root->symbol_table[i] == NULL){
-    		printf("NULL \n");
+    		//printf("NULL \n");
     		continue;
     	}
     	struct data_node *temp = root->symbol_table[i];
 	while(temp != NULL){
-    		printf("id name : %s    ,  data_type : %s   ,  id_value   :  %s                         \n",temp->ID_Name  , temp->data_type ,  temp->ID_Value); 
+		int line1;
+		printf("  %s",temp->ID_Name );
+		int i = 0;
+		while(temp->ID_Name[i] != '\0'){
+	    		i++;
+	    	}
+	    	line1 = 28 - i;
+		while(line1 > 0){
+	    		printf(" ");
+	    		line1--;
+	    	}
+    		printf("%s" ,temp->data_type); 
+	    	i = 0;
+		while(temp->data_type[i] != '\0'){
+	    		i++;
+	    	}
+	    	line1 = 30 - i;
+	    	while(line1 > 0){
+	    		printf(" ");
+	    		line1--;
+	    	}
+	    	printf("%s\n",  temp->ID_Value);
+    	
     		temp = temp->next;
     	}    
-    	printf("\n");
+    	//printf("\n");
     	}
-    	printf("//////////////////////////////////////\n");
+    	printf("-------------------------------------------------------------------------------------------------------------\n");
 }
 
 void insert(struct Scope_node* root , struct data_node* temp1){
@@ -127,7 +153,7 @@ struct data_node* symbol_copy(char *idname , char *idvalue , char *idtype){
     struct data_node* symbol = (struct data_node*) malloc(sizeof(struct data_node));
     strcpy( symbol->data_type , idtype );
     strcpy( symbol->ID_Name , idname );
-    
+    strcpy( symbol->ID_Var, "" );
     //for(int i=0;i<)
     strcpy( symbol->ID_Value, idvalue );
     //symbol->data_type = idtype;
@@ -142,8 +168,8 @@ void insert_array(struct Scope_node* root , struct data_node* temp1 , int num ){
 		symb_table_doubling(root);
 	}
         char *name = temp1->ID_Name;
-        strcat(temp1->data_type, "array");
-        
+        //strcat(temp1->data_type, "array");
+        strcat(temp1->ID_Var , "array");
         sprintf(temp1->ID_Value, "%d", num);
         
         //temp1->ID_Value
@@ -214,20 +240,28 @@ struct data_node* insert_function(struct Scope_node* root , struct data_node* te
 
 void insert_func_param( struct data_node* temp , char* paramtype ){
         	int i = 0;
-        	while(temp->list[i] == NULL){
+        	
+        	while(i < 4 && temp->list[i] != NULL){
         		i++;
         	}
         	if(i == 4){
         		printf("NOT MORE THAN 4 PARAMETERS CAN BE DEFINED IN FUNCTION");
         		exit(0);
         	}
-        	strcpy(temp->list[i] , paramtype);
+        	char ar[20] ;
+        	strcpy(ar , paramtype);
+        	temp->list[i] = ar;
+        	printf("%s type parameter added to the function \n ",temp->list[i]);
+        	//strcpy(temp->list[i] , paramtype);
         
 }
 
 struct Scope_node* root1 ;
 struct Scope_node* temproot1;
-
+struct data_node *func_node;
+int func_a = 0;
+char leftassign[20];
+char leftassignvar[20];
 //struct Scope_node* funcroot1 ;
 //struct Scope_node* functemproot1;
  // struct Scope_node* root = newScope_node();
@@ -236,6 +270,7 @@ struct Scope_node* temproot1;
 void initialize_sym(){
 	root1 = newScope_node();
 	temproot1 = root1;
+	func_node = (struct data_node*) malloc(sizeof(struct data_node));
 	//funcroot1 = newScope_node();
 	//functemproot1 = funcroot1;
 }
@@ -284,6 +319,13 @@ bool lookup( struct Scope_node* root , char *name ){
 				
 				printf("\n \n string id  %s  \n \n",name);
 				if( isequal ){
+					//char ar[20] ;
+					//strcpy(ar , temp->data_type);
+					//temp->list[i] = ar;
+					strcpy(leftassign , temp->data_type);
+					//strcpy(ar , temp->ID_Var);
+					strcpy(leftassignvar ,temp->ID_Var);
+					
 					return true;
 				}
         		}
@@ -309,6 +351,65 @@ bool lookup_for_id( struct Scope_node* root , char *name){
 }
 
 
+
+
+bool lookup_func( struct Scope_node* root , char *name ){
+        long int name_len = strlen(name);
+        int sum_ = 0; int mul = 1;
+        //char name_ar
+        for(int j=0;j<name_len;j++){
+        	
+        	sum_ = sum_ +  ((int)name[j]*mul) % root->symb_tbl_size;
+        	mul *= 2; 
+        }
+        sum_ = sum_ % root->symb_tbl_size;
+        if(root->symbol_table[sum_]  != NULL){
+       	struct data_node *temp = root->symbol_table[sum_];
+        	while(temp != NULL){ 
+        		
+        		//printf("\n \n string id  :: %ld  \n \n",name_len );
+        		long int size_id = strlen( temp->ID_Name );
+        		if( name_len == size_id ){
+				int i = 0;
+				bool isequal = true;
+				while(i < name_len  && isequal){
+					if( temp->ID_Name[i] != name[i] ){
+						isequal = false;
+					}
+					printf("\n \n %c  %c \n \n", temp->ID_Name[i]  , name[i] );
+					i++;
+				}
+				
+				printf("\n \n string id  %s  \n \n",name);
+				if( isequal ){
+					if( strcmp(leftassign , temp->data_type) != 0 ){
+						printf("\n %s variable type does not match with left assignment\n",temp->ID_Name);
+						printf("\nleftassign data type -%s, right assignment data type -%s\n", leftassign , temp->data_type);
+						exit(0);
+					}
+					return true;
+				}
+        		}
+        		temp = temp->next;
+        	}
+        	return false;
+        }
+	else{
+		return false;
+        }
+
+}
+
+bool lookup_func_id( struct Scope_node* root , char *name){
+	while(root){
+	printf("1st scope \n");
+		if(lookup_func(root , name)){
+			return true;
+		}
+		root = root->parent_scope;
+	}
+	return false;
+}
 
 
 

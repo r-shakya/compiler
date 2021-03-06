@@ -3,22 +3,23 @@ integer a,b,arr1[3];
 float f,arr2[4];
 integer g = 13;
 
-integer sumofnumber(integer a)
+integer sumofnumber(char a)
 {
-	c=a+b;
-	a[1]=c;
-	send c+1;
+	c=a;
+	a=c;
+	send c;
 }
 
 integer arr3[5],d,sum;
 
 void main(){
-	integer a[3]={1,2,3};
 	integer var1,var2;
 	a=1;
 	integer var3=10;
 	b=2+1;
+	arr2[1] = a;
 	g=3+2;
+	integer i;
 	sum=a+b;
 	if(1<2)
 	{
@@ -34,7 +35,7 @@ void main(){
 	    sum=4;
 	}
 	
-	while(array < 5)
+	while(b < 5)
 	{
 	   a=a+1;
 	}
@@ -44,7 +45,7 @@ void main(){
 	   sum=sum+i;
 	}
 
-	abc=call("sumofnumber",1);
+	i=call("sumofnumber",1);
 	a=call("sumofnumber",1,2);
 
 }
