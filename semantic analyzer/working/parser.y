@@ -77,10 +77,10 @@ IFEL: ELSE {temproot1 = change_scope( temproot1 );} '{' statements '}'        { 
 returnstmt: SEND expr                                                       {   printf("return from function %d\n",$2); }
           ;
 
-assignexpr: ID '=' { if( !lookup_for_id( temproot1 , $1 ) ){ printf("%s is not defined" , $1);  exit(0); } if( leftassignvar[0] != '\0' ){ printf("%s  use of data type is incorrect and is%shemant\n",$1,leftassignvar); exit(0); }  } expr                                                     { /*  printf("%s = %d\n",$1,$3); */ }
-          | ID '=' { if( !lookup_for_id( temproot1 , $1 ) ){ printf("%s is not defined" , $1);  exit(0); } if(leftassignvar != ""){ printf("%s  use of data type is incorrect\n",$1); exit(0); } } CALL '(' '"' ID '"' ',' paramlist ')'     { /*printf("%s = send of %s\n",$1,$6);*/ }
-          | ID '[' NUM ']' '=' { if( !lookup_for_id( temproot1 , $1 ) ){ printf("%s is not defined" , $1);  exit(0); } if(leftassignvar != "array"){ printf("%s  use of data type is incorrect\n",$1); exit(0); }  } expr                                         {/* printf("%s[%d] = %d\n",$1,$3,$6); */    printf("%s[%d] \n",$1,$3);    }
-          | ID '[' NUM ']' '=' CALL '(' '"' ID '"' ',' paramlist ')'        { if( !lookup_for_id( temproot1 , $1 ) ){ printf("%s is not defined" , $1);  exit(0); } if(leftassignvar != "array"){ printf("%s  use of data type is incorrect\n",$1); exit(0); }  printf("%s[%d] = send of %s\n",$1,$3,$9); }
+assignexpr: ID '=' { if( !lookup_for_id( temproot1 , $1 ) ){ printf("%s is not defined" , $1);  exit(0); } if( leftassignvar[0] != '\0' ){ printf("%s  use of data type is incorrect and is%s\n",$1,leftassignvar); exit(0); }  } expr                                                     {  printf("IDENTIFIER %s =  \n",$1);  }
+          | ID '=' CALL '(' '"' ID { if( !lookup_for_id( temproot1 , $1 ) ){ printf("%s is not defined" , $1);  exit(0); } if( leftassignvar[0] != '\0' ){ printf("%s  use of data type is incorrect and is%s\n",$1,leftassignvar); exit(0); }  if(!lookup_func_id( temproot1 , $6 ) ){ printf("%s is not defined" , $6);  exit(0); }    } '"' ','  paramlist ')'     { printf("%s = send of %s  \n",$1,$6); }
+          | ID '[' NUM ']' '=' { if( !lookup_array_id( temproot1 , $1 ,$3 ) ){ printf("%s is not defined" , $1);  exit(0); }   } expr                                         {/* printf("%s[%d] = %d\n",$1,$3,$6);    printf("%s[%d] \n",$1,$3); */    }
+          | ID '[' NUM ']' '=' CALL '(' '"' ID { if( !lookup_array_id( temproot1 , $1 ,$3 ) ){ printf("%s is not defined" , $1);  exit(0); }   if(!lookup_func_id( temproot1 , $9 ) ){ printf("%s is not defined" , $9);  exit(0); }    } '"' ',' paramlist ')'        {/* printf("%s[%d] = send of %s\n",$1,$3,$9); */}
           ;
           
 arraylist: NUM                { printf("number %d added in array\n",$1); }

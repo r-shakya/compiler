@@ -382,10 +382,19 @@ bool lookup_func( struct Scope_node* root , char *name ){
 				
 				printf("\n \n string id  %s  \n \n",name);
 				if( isequal ){
-					if( strcmp(leftassign , temp->data_type) != 0 ){
-						printf("\n %s variable type does not match with left assignment\n",temp->ID_Name);
-						printf("\nleftassign data type -%s, right assignment data type -%s\n", leftassign , temp->data_type);
-						exit(0);
+					if(strcmp( temp->data_type , "function") == 0 ){
+						if( strcmp(leftassign , temp->ID_Value) != 0 ){
+							printf("\n %s variable type does not match with left assignment\n",temp->ID_Name);
+							printf("\nleftassign data type -%s, right assignment data type -%s\n", leftassign , temp->ID_Value);
+							exit(0);
+						}
+					}
+					else{
+						if( strcmp(leftassign , temp->data_type) != 0 ){
+							printf("\n %s variable type does not match with left assignment\n",temp->ID_Name);
+							printf("\nleftassign data type -%s, right assignment data type -%s\n", leftassign , temp->data_type);
+							exit(0);
+						}
 					}
 					return true;
 				}
@@ -413,3 +422,66 @@ bool lookup_func_id( struct Scope_node* root , char *name){
 
 
 
+
+
+
+bool lookup_array( struct Scope_node* root , char *name , int siz_ ){
+        long int name_len = strlen(name);
+        int sum_ = 0; int mul = 1;
+        //char name_ar
+        for(int j=0;j<name_len;j++){
+        	
+        	sum_ = sum_ +  ((int)name[j]*mul) % root->symb_tbl_size;
+        	mul *= 2; 
+        }
+        sum_ = sum_ % root->symb_tbl_size;
+        if(root->symbol_table[sum_]  != NULL){
+       	struct data_node *temp = root->symbol_table[sum_];
+        	while(temp != NULL){ 
+        		
+        		//printf("\n \n string id  :: %ld  \n \n",name_len );
+        		long int size_id = strlen( temp->ID_Name );
+        		if( name_len == size_id ){
+				int i = 0;
+				bool isequal = true;
+				while(i < name_len  && isequal){
+					if( temp->ID_Name[i] != name[i] ){
+						isequal = false;
+					}
+					printf("\n \n %c  %c \n \n", temp->ID_Name[i]  , name[i] );
+					i++;
+				}
+				
+				printf("\n \n string id  %s  \n \n",name);
+				if( isequal ){
+					strcpy(leftassign , temp->data_type);
+					strcpy(leftassignvar ,temp->ID_Var);
+					if( strcmp(leftassignvar , "array" ) != 0 ){ printf("%s  use of data type is incorrect %s \n",name,leftassignvar); exit(0); }
+					if( siz_ >= atoi(temp->ID_Value ) ){
+						printf("\n  accessing %s out of range ", name);
+						exit(0);					
+					}
+					
+					return true;
+				}
+        		}
+        		temp = temp->next;
+        	}
+        	return false;
+        }
+	else{
+		return false;
+        }
+
+}
+
+bool lookup_array_id( struct Scope_node* root , char *name , int siz_){
+	while(root){
+	printf("1st scope \n");
+		if(lookup_array(root , name ,siz_ )){
+			return true;
+		}
+		root = root->parent_scope;
+	}
+	return false;
+}

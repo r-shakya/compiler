@@ -17,7 +17,7 @@ void main(){
 	a=1;
 	integer var3=10;
 	b=2+1;
-	arr2[1] = a;
+	arr1[2] = a;
 	g=3+2;
 	integer i;
 	sum=a+b;
@@ -45,7 +45,7 @@ void main(){
 	   sum=sum+i;
 	}
 
-	i=call("sumofnumber",1);
+	arr1[5] =call("sumofnumber",1);
 	a=call("sumofnumber",1,2);
 
 }
