@@ -1,0 +1,9 @@
+char c;
+integer a,b,arr1[3];
+float f,arr2[4],g;
+
+void main(){
+	integer a[3];
+	integer var1,var2;
+	char var3;
+}

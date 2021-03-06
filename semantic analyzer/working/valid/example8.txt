@@ -1,0 +1,12 @@
+char c;
+
+integer arr3[5],d,sum;
+
+void main(){
+
+	for(i=1;i<5;i=i+1)
+	{
+	   sum=sum+i;
+	}
+
+}

@@ -2055,7 +2055,7 @@ void printMSG(char *token_type){
 }
 
 void yyerror(char *message){
-	printf("Error: %s    in line no    %d    token = %s\n", message, lineno, yytext);
+	printf("Lexer Error: %s    in line no  =  %d    token >>>> %s\n", message, lineno, yytext);
 	exit(1);
 }
 

@@ -1,0 +1,14 @@
+void main(){
+
+	
+	while(array < 5)
+	{
+	   if(3<4)
+	   {
+	      integer var1;
+	      sum=4;
+	   }
+	
+	}
+
+}

@@ -1,0 +1,13 @@
+char c;
+integer a,b,arr1[3];
+float f,arr2[4];
+integer g = 13;
+
+integer arr3[5],d,sum;
+
+void main(){
+	integer a[3]={1,2,3};
+	integer var1,var2;
+	char var4;
+	integer var3=var4;
+}

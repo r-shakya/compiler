@@ -1,0 +1,12 @@
+char c;
+integer a,b,arr1[3];
+
+void main(){
+    integer a;
+    char c;
+	if(a<c)
+	{
+	    integer var1;
+	    sum=4;
+	}
+}

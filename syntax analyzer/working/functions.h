@@ -1,6 +1,9 @@
 #include<stdio.h>
 #include<string.h>
 
+extern int lineno;
+extern char *yytext;
+
 int checkDay(int d){
   return (d>=1 && d<=31);
 }
