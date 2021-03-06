@@ -45,7 +45,7 @@ void main(){
 	   sum=sum+i;
 	}
 
-	arr1[5] =call("sumofnumber",1);
-	a=call("sumofnumber",1,2);
+	arr1[1] =call("sumofnumber",c);
+	a=call("sumofnumber",c,a);
 
 }

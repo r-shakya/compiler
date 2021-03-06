@@ -256,6 +256,7 @@ void insert_func_param( struct data_node* temp , char* paramtype ){
         
 }
 
+  int var_i = 0;
 struct Scope_node* root1 ;
 struct Scope_node* temproot1;
 struct data_node *func_node;
@@ -388,6 +389,7 @@ bool lookup_func( struct Scope_node* root , char *name ){
 							printf("\nleftassign data type -%s, right assignment data type -%s\n", leftassign , temp->ID_Value);
 							exit(0);
 						}
+						func_node = temp;
 					}
 					else{
 						if( strcmp(leftassign , temp->data_type) != 0 ){
