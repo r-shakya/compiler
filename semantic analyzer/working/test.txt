@@ -1,9 +1,9 @@
-char c;
-integer a,b,arr1[3];
+char c,arr1[3];
+integer a,b;
 float f,arr2[4];
 integer g = 13;
 
-integer sumofnumber(char a)
+char sumofnumber(char a)
 {
 	c=a;
 	a=c;
@@ -17,7 +17,7 @@ void main(){
 	a=1;
 	integer var3=10;
 	b=2+1;
-	arr1[2] = a;
+	
 	g=3+2;
 	integer i;
 	sum=a+b;

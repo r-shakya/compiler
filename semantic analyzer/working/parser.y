@@ -74,7 +74,7 @@ IFEL: ELSE {temproot1 = change_scope( temproot1 );} '{' statements '}'        { 
     ;
 
 
-returnstmt: SEND expr                                                       {   printf("return from function %d\n",$2); }
+returnstmt: SEND ID                                                       {  if( !lookup_func_id( temproot1 , $2 ) ){ printf("%s is not defined" , $2);  exit(0); } if( strcmp( func_node->ID_Value , leftassign ) != 0 ){ printf( "parameter %s in the function does not match with return type\n",$2 ); exit(0);  } printf("return from function %s\n",$2); }
           ;
 
 assignexpr: ID '=' { if( !lookup_for_id( temproot1 , $1 ) ){ printf("%s is not defined" , $1);  exit(0); } if( leftassignvar[0] != '\0' ){ printf("%s  use of data type is incorrect and is%s\n",$1,leftassignvar); exit(0); }  } expr                                                     {  printf("IDENTIFIER %s =  \n",$1);  }
