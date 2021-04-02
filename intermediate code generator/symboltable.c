@@ -314,11 +314,11 @@ bool lookup( struct Scope_node* root , char *name ){
 					if( temp->ID_Name[i] != name[i] ){
 						isequal = false;
 					}
-					printf("\n \n %c  %c \n \n", temp->ID_Name[i]  , name[i] );
+					//printf("\n \n %c  %c \n \n", temp->ID_Name[i]  , name[i] );
 					i++;
 				}
 				
-				printf("\n \n string id  %s  \n \n",name);
+				//printf("\n \n string id  %s  \n \n",name);
 				if( isequal ){
 					//char ar[20] ;
 					//strcpy(ar , temp->data_type);
@@ -342,7 +342,7 @@ bool lookup( struct Scope_node* root , char *name ){
 
 bool lookup_for_id( struct Scope_node* root , char *name){
 	while(root){
-	printf("1st scope \n");
+	//printf("1st scope \n");
 		if(lookup(root , name)){
 			return true;
 		}
@@ -377,11 +377,11 @@ bool lookup_func( struct Scope_node* root , char *name ){
 					if( temp->ID_Name[i] != name[i] ){
 						isequal = false;
 					}
-					printf("\n \n %c  %c \n \n", temp->ID_Name[i]  , name[i] );
+					//printf("\n \n %c  %c \n \n", temp->ID_Name[i]  , name[i] );
 					i++;
 				}
 				
-				printf("\n \n string id  %s  \n \n",name);
+				//printf("\n \n string id  %s  \n \n",name);
 				if( isequal ){
 					if(strcmp( temp->data_type , "function") == 0 ){
 						if( strcmp(leftassign , temp->ID_Value) != 0 ){
@@ -413,7 +413,7 @@ bool lookup_func( struct Scope_node* root , char *name ){
 
 bool lookup_func_id( struct Scope_node* root , char *name){
 	while(root){
-	printf("1st scope \n");
+	//printf("1st scope \n");
 		if(lookup_func(root , name)){
 			return true;
 		}
@@ -450,11 +450,11 @@ bool lookup_array( struct Scope_node* root , char *name , int siz_ ){
 					if( temp->ID_Name[i] != name[i] ){
 						isequal = false;
 					}
-					printf("\n \n %c  %c \n \n", temp->ID_Name[i]  , name[i] );
+					//printf("\n \n %c  %c \n \n", temp->ID_Name[i]  , name[i] );
 					i++;
 				}
 				
-				printf("\n \n string id  %s  \n \n",name);
+				//printf("\n \n string id  %s  \n \n",name);
 				if( isequal ){
 					strcpy(leftassign , temp->data_type);
 					strcpy(leftassignvar ,temp->ID_Var);
@@ -479,7 +479,7 @@ bool lookup_array( struct Scope_node* root , char *name , int siz_ ){
 
 bool lookup_array_id( struct Scope_node* root , char *name , int siz_){
 	while(root){
-	printf("1st scope \n");
+	//printf("1st scope \n");
 		if(lookup_array(root , name ,siz_ )){
 			return true;
 		}
