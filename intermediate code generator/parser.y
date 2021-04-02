@@ -30,7 +30,7 @@ int yydebug=1;
 %start program
 %%
 
-program: declarations VOID MAIN { /*temproot1 = lift_scope( temproot1 ); */ temproot1 = change_scope( temproot1 );  } '(' ')' '{' statements '}' {printf("main function executed");}
+program: declarations VOID MAIN { /*temproot1 = lift_scope( temproot1 ); */ temproot1 = change_scope( temproot1 );  } '(' ')' '{' statements '}' {}
        ;
             
 declarations: decl ';'      {  }
@@ -62,14 +62,14 @@ statements: assignexpr ';'                                                      
     | statements assignexpr ';'                                                           {}
     | statements decl ';'                                                                 {}
     | statements returnstmt ';'                                                           {}
-    | statements IF '(' logicalexpr ')' { temproot1 = change_scope( temproot1 ); } '{' statements '}' { temproot1 = temproot1->parent_scope; } IFEL                                { display( temproot1 );  printf("only if statement executed \n"); }
+    | statements IF '(' logicalexpr ')' { temproot1 = change_scope( temproot1 ); printf("if not t%d goto l%d\n",tnum-1,lnum); } '{' statements '}' { temproot1 = temproot1->parent_scope; } IFEL                                { display( temproot1 );  printf(" \n");  printf("l%d:\n",lnum); lnum++; }
    // | statements IF '(' logicalexpr ')' '{' statements '}' ELSE '{' statements '}'        { printf("if-else statement executed \n\n"); }
     | statements WHILE '(' logicalexpr ')' { temproot1 = change_scope( temproot1 ); }  '{' statements '}'                             { display( temproot1 ); temproot1 = temproot1->parent_scope;  printf("while statement executed \n\n"); }
     | statements FOR { temproot1 = change_scope( temproot1 ); } '(' assignexpr ';' logicalexpr ';' assignexpr ')' '{' statements '}' { display( temproot1 ); temproot1 = temproot1->parent_scope;  printf("for statement executed \n\n"); }
     | ;
     
 
-IFEL: ELSE {temproot1 = change_scope( temproot1 );} '{' statements '}'        { temproot1 = temproot1->parent_scope; printf("else statement executed \n\n"); }
+IFEL: ELSE {temproot1 = change_scope( temproot1 );  printf("goto l%d\n",lnum+1); printf("l%d:\n",lnum);  lnum++; } '{' statements '}'        { temproot1 = temproot1->parent_scope;  }
     | {  }
     ;
 
@@ -100,11 +100,11 @@ expr: NUM                     { printf("t%d = %d\n",tnum,$1); tnum++; }
     | '(' expr ')'            {  }
     ;
 
-logicalexpr: NUM                      { $$ = $1; }
-    | ID                              { $$ = 1; if( !lookup_for_id( temproot1 , $1 ) ){ printf("%s is not defined" , $1);  exit(0); } printf("id in logical expression = %s\n",$1); }
-    | logicalexpr '<' logicalexpr     { if($1<$3){$$=1;}else{$$=0;} printf("%d < %d\n",$1,$3); }
-    | logicalexpr '>' logicalexpr     { if($1>$3){$$=1;}else{$$=0;} printf("%d > %d\n",$1,$3); }
-    | '(' logicalexpr ')'             { $$ =  $2; printf("( %d )\n",$2); }
+logicalexpr: NUM                      { printf("t%d = %d\n",tnum,$1); tnum++; }
+    | ID                              { printf("t%d = %s\n",tnum,$1); tnum++; if( !lookup_for_id( temproot1 , $1 ) ){ printf("%s is not defined" , $1);  exit(0); }  }
+    | logicalexpr '<' logicalexpr     { printf("t%d = t%d < t%d\n",tnum,tnum-2,tnum-1); tnum++; }
+    | logicalexpr '>' logicalexpr     { printf("t%d = t%d > t%d\n",tnum,tnum-2,tnum-1); tnum++; }
+    | '(' logicalexpr ')'             {  }
     ;
 
 

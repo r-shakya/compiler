@@ -2,4 +2,4 @@
 #include<string.h>
 
 int tnum = 0;
-int isexpr = 1;
+int lnum=0;

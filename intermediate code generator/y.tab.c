@@ -1460,7 +1460,7 @@ yyreduce:
 
   case 3:
 #line 33 "parser.y"
-                                                                                                                                                 {printf("main function executed");}
+                                                                                                                                                 {}
 #line 1465 "y.tab.c"
     break;
 
@@ -1610,19 +1610,19 @@ yyreduce:
 
   case 29:
 #line 65 "parser.y"
-                                        { temproot1 = change_scope( temproot1 ); }
+                                        { temproot1 = change_scope( temproot1 ); printf("if not t%d goto l%d\n",tnum-1,lnum); }
 #line 1615 "y.tab.c"
     break;
 
   case 30:
 #line 65 "parser.y"
-                                                                                                      { temproot1 = temproot1->parent_scope; }
+                                                                                                                                                   { temproot1 = temproot1->parent_scope; }
 #line 1621 "y.tab.c"
     break;
 
   case 31:
 #line 65 "parser.y"
-                                                                                                                                                                                   { display( temproot1 );  printf("only if statement executed \n"); }
+                                                                                                                                                                                                                                { display( temproot1 );  printf(" \n");  printf("l%d:\n",lnum); lnum++; }
 #line 1627 "y.tab.c"
     break;
 
@@ -1652,13 +1652,13 @@ yyreduce:
 
   case 37:
 #line 72 "parser.y"
-           {temproot1 = change_scope( temproot1 );}
+           {temproot1 = change_scope( temproot1 );  printf("goto l%d\n",lnum+1); printf("l%d:\n",lnum);  lnum++; }
 #line 1657 "y.tab.c"
     break;
 
   case 38:
 #line 72 "parser.y"
-                                                                              { temproot1 = temproot1->parent_scope; printf("else statement executed \n\n"); }
+                                                                                                                                             { temproot1 = temproot1->parent_scope;  }
 #line 1663 "y.tab.c"
     break;
 
@@ -1790,31 +1790,31 @@ yyreduce:
 
   case 60:
 #line 103 "parser.y"
-                                      { (yyval.number) = (yyvsp[0].number); }
+                                      { printf("t%d = %d\n",tnum,(yyvsp[0].number)); tnum++; }
 #line 1795 "y.tab.c"
     break;
 
   case 61:
 #line 104 "parser.y"
-                                      { (yyval.number) = 1; if( !lookup_for_id( temproot1 , (yyvsp[0].string) ) ){ printf("%s is not defined" , (yyvsp[0].string));  exit(0); } printf("id in logical expression = %s\n",(yyvsp[0].string)); }
+                                      { printf("t%d = %s\n",tnum,(yyvsp[0].string)); tnum++; if( !lookup_for_id( temproot1 , (yyvsp[0].string) ) ){ printf("%s is not defined" , (yyvsp[0].string));  exit(0); }  }
 #line 1801 "y.tab.c"
     break;
 
   case 62:
 #line 105 "parser.y"
-                                      { if((yyvsp[-2].number)<(yyvsp[0].number)){(yyval.number)=1;}else{(yyval.number)=0;} printf("%d < %d\n",(yyvsp[-2].number),(yyvsp[0].number)); }
+                                      { printf("t%d = t%d < t%d\n",tnum,tnum-2,tnum-1); tnum++; }
 #line 1807 "y.tab.c"
     break;
 
   case 63:
 #line 106 "parser.y"
-                                      { if((yyvsp[-2].number)>(yyvsp[0].number)){(yyval.number)=1;}else{(yyval.number)=0;} printf("%d > %d\n",(yyvsp[-2].number),(yyvsp[0].number)); }
+                                      { printf("t%d = t%d > t%d\n",tnum,tnum-2,tnum-1); tnum++; }
 #line 1813 "y.tab.c"
     break;
 
   case 64:
 #line 107 "parser.y"
-                                      { (yyval.number) =  (yyvsp[-1].number); printf("( %d )\n",(yyvsp[-1].number)); }
+                                      {  }
 #line 1819 "y.tab.c"
     break;
 

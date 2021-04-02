@@ -1,0 +1,39 @@
+-------if----------
+t1=var1<var2
+if not t1 goto l0
+var3=var1+var2;
+l0:
+
+
+
+
+
+
+
+
+----------if else----------
+t1=var1<var2
+if not t1 goto l0
+var3=var1+var2;
+goto l1
+l0:
+var3=0;
+l1:
+
+
+
+----------while------------
+l0:
+t1=var1<var2
+if not t1 goto l1
+var3=var1+var2;
+goto l0
+l1:
+
+
+
+
+
+
+
+
