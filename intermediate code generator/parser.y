@@ -64,8 +64,8 @@ statements: assignexpr ';'                                                      
     | statements returnstmt ';'                                                           {}
     | statements IF '(' logicalexpr ')' { temproot1 = change_scope( temproot1 ); printf("if not t%d goto l%d\n",tnum-1,lnum); } '{' statements '}' { temproot1 = temproot1->parent_scope; } IFEL                                { display( temproot1 );  printf(" \n");  printf("l%d:\n",lnum); lnum++; }
    // | statements IF '(' logicalexpr ')' '{' statements '}' ELSE '{' statements '}'        { printf("if-else statement executed \n\n"); }
-    | statements WHILE '(' logicalexpr ')' { temproot1 = change_scope( temproot1 ); }  '{' statements '}'                             { display( temproot1 ); temproot1 = temproot1->parent_scope;  printf("while statement executed \n\n"); }
-    | statements FOR { temproot1 = change_scope( temproot1 ); } '(' assignexpr ';' logicalexpr ';' assignexpr ')' '{' statements '}' { display( temproot1 ); temproot1 = temproot1->parent_scope;  printf("for statement executed \n\n"); }
+    | statements { printf("l%d:\n",lnum); lnum++; } WHILE '(' logicalexpr ')' { printf("if not t%d goto l%d\n",tnum-1,lnum); temproot1 = change_scope( temproot1 ); }  '{' statements '}'                             { display( temproot1 ); temproot1 = temproot1->parent_scope; printf("goto l%d\n",lnum-1);  printf("l%d:\n",lnum); lnum++; }
+    | statements FOR {  temproot1 = change_scope( temproot1 ); } '(' assignexpr ';' { printf("l%d:\n",lnum); lnum++; } logicalexpr ';' { printf("if not t%d goto l%d\n",tnum-1,lnum+2); printf("goto l%d\n",lnum+1); printf("l%d:\n",lnum); lnum++;  } assignexpr { printf("goto l%d\n",lnum-2); printf("l%d:\n",lnum); lnum++; } ')' '{' statements '}' { printf("goto l%d\n",lnum-2); display( temproot1 ); temproot1 = temproot1->parent_scope;  printf("l%d:\n",lnum); lnum++; }
     | ;
     
 
