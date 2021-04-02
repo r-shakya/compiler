@@ -1,9 +1,0 @@
-void decl(){
-integer b;
-float g;
-}
-start:
-integer a;
-float f;
-call("decl");
-end;

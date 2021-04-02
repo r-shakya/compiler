@@ -1,0 +1,10 @@
+char c;
+
+void main(){
+	
+	while(array < 5)
+	{
+	   a=a+1;
+	}
+
+}

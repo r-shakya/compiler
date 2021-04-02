@@ -1,6 +1,0 @@
-start:
-integer a;
-float f;
-a=5;
-f=5.0;
-end;

@@ -1,5 +1,0 @@
-void main(){
-integer a;
-input(a);
-output(a);
-}

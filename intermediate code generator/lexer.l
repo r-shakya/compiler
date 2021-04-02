@@ -7,22 +7,49 @@ int lineno = 1;
 void printMSG(char *token_type);
 void lexer_error(char *message);
 %}
-alpha [A-Za-z]
+type "integer"|"float"|"char"
+letter_ [A-Za-z_]
 digit [0-9]
 %%
-{alpha}+    	        {strcpy(yylval.string, yytext); return str; }
-{digit}+ 		{yylval.number= atoi(yytext); return num;}
+{type}                 {strcpy(yylval.string, yytext); return typestr; }
+"void"                 { strcpy(yylval.string, yytext); return VOID; }
+"main"                 { return MAIN; }
+"if"                   { return IF; }
+"else"                 { return ELSE; }
+"while"                { return WHILE; }
+"for"                  { return FOR; }
+"call"                 { return CALL; }
+"send"                 { return SEND; }
 
-"&"      		{ return '&'; }
-"|"      		{ return '|'; }
-"^"	 			{ return '^'; }
-"~"     		{ return '~'; }
-"("				{ return '('; }
-")"				{ return ')'; }
-";"				{ return ';'; }
-[ \t\n]         { ; }
+{letter_}({letter_}|{digit})*    	        {strcpy(yylval.string, yytext); return ID; }
+{digit}+ 		                        {yylval.number= atoi(yytext); return NUM;}
+
+"+"      		{ return '+'; }
+"-"      		{ return '-'; }
+"*"	 	        { return '*'; }
+"/"                     { return '/'; }
+
+"("                     { return '('; }
+")"                     { return ')'; }
+"{"                     { return '{'; }
+"}"                     { return '}'; }
+"["                     { return '['; }
+"]"                     { return ']'; }
+
+"<"                     { return '<'; }
+">"                     { return '>'; }
+"="                     { return '='; }
+
+";"		        { return ';'; }
+","		        { return ','; }
+["]		        { return '"'; }
+[']		        { return ','; }
+
+
+"\n"			{ lineno++; }
+[ \t\r\f]+	        {}
 "$"		        { return 0; }
-.  		        { return yytext[0]; }
+.  		        { lexer_error("unknown character"); }
 %%
 
 void printMSG(char *token_type){

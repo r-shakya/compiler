@@ -1,0 +1,10 @@
+void main(){
+	char c;
+	if(1<2)
+	{
+	    sum=2;
+	}
+	else{
+	    sum=4+c;
+	}
+}
