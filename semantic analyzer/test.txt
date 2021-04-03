@@ -8,7 +8,7 @@ void main(){
 	char ar[5];
 	var1 = 5;
 	char x;
-	ar[0] =  call("fn",x);
+	ar[0] =  call("fn", i  );
 	
 }
 

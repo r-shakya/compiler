@@ -250,9 +250,9 @@ void insert_func_param( struct data_node* temp , char* paramtype ){
         	}
         	char ar[20] ;
         	strcpy(ar , paramtype);
-        	temp->list[i] = ar;
-        	printf("%s type parameter added to the function \n ",temp->list[i]);
-        	//strcpy(temp->list[i] , paramtype);
+        	temp->list[i] = malloc(sizeof(char) * strlen(ar)); 
+        	strncpy(temp->list[i], ar, strlen(ar));
+        	printf("%s type parameter added to the function \n ",temp->list[i]  );
         
 }
 

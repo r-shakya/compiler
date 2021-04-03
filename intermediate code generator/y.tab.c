@@ -1687,7 +1687,7 @@ yyreduce:
 
   case 43:
 #line 76 "parser.y"
-                                                                          {  if( !lookup_func_id( temproot1 , (yyvsp[0].string) ) ){ printf("%s is not defined" , (yyvsp[0].string));  exit(0); } if( strcmp( func_node->ID_Value , leftassign ) != 0 ){ printf( "parameter %s in the function does not match with return type\n",(yyvsp[0].string) ); exit(0);  } printf("return from function %s\n",(yyvsp[0].string)); }
+                                                                          {  if( !lookup_for_id( temproot1 , (yyvsp[0].string) ) ){ printf("%s is not defined" , (yyvsp[0].string));  exit(0); } if( strcmp( func_node->ID_Value , leftassign ) != 0 ){ printf( "parameter %s in the function does not match with return type\n",(yyvsp[0].string) ); exit(0);  } printf("return from function %s\n",(yyvsp[0].string)); }
 #line 1692 "y.tab.c"
     break;
 
@@ -1735,7 +1735,7 @@ yyreduce:
 
   case 51:
 #line 82 "parser.y"
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       {   printf("t%d = call %s",tnum,(yyvsp[-5].string)); tnum++;  printf("*t%d = t%d\n",ar_tnum , tnum-1); tnum++;   }
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       {   printf("t%d = call %s\n",tnum,(yyvsp[-5].string)); tnum++;  printf("*t%d = t%d\n",ar_tnum , tnum-1); tnum++;   }
 #line 1740 "y.tab.c"
     break;
 
@@ -1753,7 +1753,7 @@ yyreduce:
 
   case 54:
 #line 89 "parser.y"
-                             { if( !lookup_for_id( temproot1 , (yyvsp[0].string) ) ){ printf("%s is not defined" , (yyvsp[0].string));  exit(0); }  if(var_i >= 4 || func_node->list[var_i] == NULL ){ printf("extra parameters found in function call \n"); exit(0); } if( strcmp( func_node->list[var_i] , leftassign ) != 0 ){ printf( "parameter %s in the function call has different data type wrt function declaration",(yyvsp[0].string) );  exit(0); }  printf("number %s added as parameter\n",(yyvsp[0].string)); }
+                             { if( !lookup_for_id( temproot1 , (yyvsp[0].string) ) ){ printf("%s is not defined" , (yyvsp[0].string));  exit(0); }  if(var_i >= 4 || func_node->list[var_i] == NULL ){ printf("extra parameters found in function call \n"); exit(0); } if( strcmp( func_node->list[var_i] , leftassign ) != 0 ){ printf( "parameter %s in the function call has different data type wrt function declaration funcnode,%d,   leftassign/%s/   ",(yyvsp[0].string),var_i , leftassign );  exit(0); }  printf("number %s added as parameter\n",(yyvsp[0].string)); }
 #line 1758 "y.tab.c"
     break;
 
