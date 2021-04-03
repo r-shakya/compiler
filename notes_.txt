@@ -1,0 +1,10 @@
+PENDING WORK:
+
+issues in github
+
+
+
+
+
+SEMANTIC ANALYZER ;
+1. in array we have to change id [NUM ] NUM to expr and need to adjust lookup function  accordingly

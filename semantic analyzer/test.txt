@@ -1,51 +1,14 @@
-char c,arr1[3];
-integer a,b;
-float f,arr2[4];
-integer g = 13;
-
-char sumofnumber(char a)
-{
-	c=a;
-	a=c;
-	send c;
+integer e;
+char fn(char a){
+  send a;
 }
-
-integer arr3[5],d,sum;
 
 void main(){
-	integer var1,var2;
-	a=1;
-	integer var3=10;
-	b=2+1;
+	integer var1,i,var3;
+	char ar[5];
+	var1 = 5;
+	char x;
+	ar[0] =  call("fn",x);
 	
-	g=3+2;
-	integer i;
-	sum=a+b;
-	if(1<2)
-	{
-	    sum=2;
-	}
-	else{
-	    sum=4;
-	}
-
-	if(3<4)
-	{
-	    integer var1;
-	    sum=4;
-	}
-	
-	while(b < 5)
-	{
-	   a=a+1;
-	}
-
-	for(i=1;i<5;i=i+1)
-	{
-	   sum=sum+i;
-	}
-
-	arr1[1] =call("sumofnumber",c);
-	a=call("sumofnumber",c,a);
-
 }
+

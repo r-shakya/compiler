@@ -33,8 +33,7 @@ int yydebug=1;
 program: declarations VOID MAIN { /*temproot1 = lift_scope( temproot1 ); */ temproot1 = change_scope( temproot1 );  } '(' ')' '{' statements '}' {}
        ;
             
-declarations: decl ';'      {  }
-    | declarations decl ';' {  }
+declarations: declarations decl ';' {  }
     | declarations VOID ID { if( lookup( temproot1 , $3  ) ){ printf("Variable named %s exists already\n ",$3); exit( 0 ); } else{ func_node = insert_function( temproot1 , symbol_copy( $3 ,$2 ,""  )  ); func_a = 1; } temproot1 = change_scope( temproot1 ); } '(' funcdecl ')'  { func_a = 0; }  '{' statements '}'    { display( temproot1 ); temproot1 = temproot1->parent_scope;    printf("%s function executed with send-type %s \n\n",$3,$2); }
     | declarations typestr ID {   if( lookup( temproot1 , $3  ) ){ printf("Variable named %s exists already\n ",$3); exit( 0 ); } else{ func_node = insert_function( temproot1 , symbol_copy( $3 ,$2 ,""  )  ); func_a = 1; }    temproot1 = change_scope( temproot1 ); } '(' funcdecl ')' { func_a = 0; }  '{' statements '}' { display( temproot1 ); temproot1 = temproot1->parent_scope;   printf("%s function executed with send-type %s \n\n",$3,$2);  } 
     | ;
@@ -79,8 +78,8 @@ returnstmt: SEND ID                                                       {  if(
 
 assignexpr: ID '=' { if( !lookup_for_id( temproot1 , $1 ) ){ printf("%s is not defined" , $1);  exit(0); } if( leftassignvar[0] != '\0' ){ printf("%s  use of data type is incorrect and is%s\n",$1,leftassignvar); exit(0); }  } expr                                                    { /* printf("IDENTIFIER %s =  \n",$1); */  printf("%s = t%d \n",$1,tnum - 1);  }
           | ID '=' CALL '(' '"' ID { if( !lookup_for_id( temproot1 , $1 ) ){ printf("%s is not defined" , $1);  exit(0); } if( leftassignvar[0] != '\0' ){ printf("%s  use of data type is incorrect and is%s\n",$1,leftassignvar); exit(0); }  if(!lookup_func_id( temproot1 , $6 ) ){ printf("%s is not defined" , $6);  exit(0); }  var_i = 0;  } '"' ','  paramlist ')'     { printf("%s = send of %s  \n",$1,$6); }
-          | ID '[' NUM ']' '=' { if( !lookup_array_id( temproot1 , $1 ,$3 ) ){ printf("%s is not defined" , $1);  exit(0); }   } expr                                         {/* printf("%s[%d] = %d\n",$1,$3,$6);    printf("%s[%d] \n",$1,$3); */    }
-          | ID '[' NUM ']' '=' CALL '(' '"' ID { if( !lookup_array_id( temproot1 , $1 ,$3 ) ){ printf("%s is not defined" , $1);  exit(0); }   if(!lookup_func_id( temproot1 , $9 ) ){ printf("%s is not defined" , $9);  exit(0); }  var_i = 0;  } '"' ',' paramlist ')'        {/* printf("%s[%d] = send of %s\n",$1,$3,$9); */}
+          | ID '[' NUM ']' '=' {  if( !lookup_array_id( temproot1 , $1 ,$3 ) ){ printf("%s is not defined" , $1);  exit(0); }  printf("t%d = %d\n",tnum,$3); tnum++; printf("t%d = 4 * t%d\n",tnum,tnum-1); tnum++;  printf("t%d = &%s\n",tnum,$1); tnum++; printf("t%d = t%d + t%d\n",tnum,tnum-1,tnum-2); ar_tnum = tnum; tnum++;   } expr                                         { printf("*t%d = t%d\n",ar_tnum , tnum-1); tnum++;    }
+          | ID '[' NUM ']' '=' CALL '(' '"' ID { if( !lookup_array_id( temproot1 , $1 ,$3 ) ){ printf("%s is not defined" , $1);  exit(0); }   if(!lookup_func_id( temproot1 , $9 ) ){ printf("%s is not defined" , $9);  exit(0); }  var_i = 0; printf("t%d = %d\n",tnum,$3); tnum++; printf("t%d = 4 * t%d\n",tnum,tnum-1); tnum++;  printf("t%d = &%s\n",tnum,$1); tnum++; printf("t%d = t%d + t%d\n",tnum,tnum-1,tnum-2); ar_tnum = tnum; tnum++;   } '"' ',' paramlist ')'        {   printf("t%d = call %s",tnum,$9); tnum++;  printf("*t%d = t%d\n",ar_tnum , tnum-1); tnum++;   }
           ;
           
 arraylist: NUM                { printf("number %d added in array\n",$1); }
@@ -122,6 +121,7 @@ int main(int argc,char *argv[]){
 
 int yyerror(char *s){
   printf("\n\nError: %s \n",s);
+  printf("\n\nSyntax Error: in line no %d >>>>> %s \n",lineno,yytext);
   yydebug=0;
   return 0;
 }
