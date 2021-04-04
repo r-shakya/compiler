@@ -1,15 +1,9 @@
-
-integer e;
-char fn(char a){
-  send a;
-}
-
 void main(){
 	integer var1,i,var3;
-	char ar[5];
-	var1 = 5;
-	char x;
-	ar[0] =  call("fn", x);
-	
+	integer a[5];
+	i=a[i];
+	if(a[i+1]<a[i]){
+	   var3=0;
+	}
 }
 

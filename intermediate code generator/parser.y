@@ -97,12 +97,15 @@ expr: NUM                     { printf("t%d = %d\n",tnum,$1); tnum++; }
     | expr '*' expr           { printf("t%d = t%d * t%d\n",tnum,tnum-2,tnum-1); tnum++; }
     | expr '/' expr           { printf("t%d = t%d / t%d\n",tnum,tnum-2,tnum-1); tnum++; }
     | '(' expr ')'            {  }
+    /*| ID '[' NUM ']'          { printf("t%d = %d\n",tnum,$3); tnum++; printf("t%d = 4 * t%d\n",tnum,tnum-1); tnum++;  printf("t%d = &%s\n",tnum,$1); tnum++; printf("t%d = t%d + t%d\n",tnum,tnum-1,tnum-2); tnum++;  printf("t%d = *t%d\n", tnum,tnum-1); tnum++;  }*/
+    | ID '[' expr ']'           { /*printf("t%d = t%d\n",tnum,tnum-1); tnum++;*/ printf("t%d = 4 * t%d\n",tnum,tnum-1); tnum++;  printf("t%d = &%s\n",tnum,$1); tnum++; printf("t%d = t%d + t%d\n",tnum,tnum-1,tnum-2); tnum++;  printf("t%d = *t%d\n", tnum,tnum-1); tnum++;  }
     ;
 
-logicalexpr: NUM                      { printf("t%d = %d\n",tnum,$1); tnum++; }
-    | ID                              { printf("t%d = %s\n",tnum,$1); tnum++; if( !lookup_for_id( temproot1 , $1 ) ){ printf("%s is not defined" , $1);  exit(0); }  }
-    | logicalexpr '<' logicalexpr     { printf("t%d = t%d < t%d\n",tnum,tnum-2,tnum-1); tnum++; }
-    | logicalexpr '>' logicalexpr     { printf("t%d = t%d > t%d\n",tnum,tnum-2,tnum-1); tnum++; }
+logicalexpr: NUM                      { printf("t%d = %d\n",tnum,$1); $$=tnum; tnum++; }
+    | ID                              { printf("t%d = %s\n",tnum,$1); $$=tnum; tnum++; if( !lookup_for_id( temproot1 , $1 ) ){ printf("%s is not defined" , $1);  exit(0); }  }
+    | ID '[' expr ']'                  { if( !lookup_for_id( temproot1 , $1 ) ){ printf("%s is not defined" , $1);  exit(0); } printf("t%d = 4 * t%d\n",tnum,tnum-1); tnum++;  printf("t%d = &%s\n",tnum,$1); tnum++; printf("t%d = t%d + t%d\n",tnum,tnum-1,tnum-2); tnum++;  printf("t%d = *t%d\n", tnum,tnum-1); $$=tnum; tnum++;  }
+    | logicalexpr '<' logicalexpr     { printf("t%d = t%d < t%d\n",tnum,$1,$3); tnum++; /*printf("t%d = t%d < t%d\n",tnum,tnum-2,tnum-1); tnum++;*/ }
+    | logicalexpr '>' logicalexpr     { printf("t%d = t%d > t%d\n",tnum,$1,$3); tnum++; /*printf("t%d = t%d > t%d\n",tnum,tnum-2,tnum-1); tnum++;*/ }
     | '(' logicalexpr ')'             {  }
     ;
 
