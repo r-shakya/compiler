@@ -61,15 +61,15 @@ statements: assignexpr ';'                                                      
     | statements assignexpr ';'                                                           {}
     | statements decl ';'                                                                 {}
     | statements returnstmt ';'                                                           {}
-    | statements IF '(' logicalexpr ')' { temproot1 = change_scope( temproot1 ); printf("if not t%d goto l%d\n",tnum-1,lnum); } '{' statements '}' { temproot1 = temproot1->parent_scope; } IFEL                                { display( temproot1 );  printf(" \n");  printf("l%d:\n",lnum); lnum++; }
+    | statements IF '(' logicalexpr ')' { temproot1 = change_scope( temproot1 ); lsn[loop_count] = lnum; loop_count++;   printf("if not t%d goto l%d\n",tnum-1,lnum); lnum = lnum + 2 ; } '{' statements '}' { temproot1 = temproot1->parent_scope; } IFEL                                { display( temproot1 );  printf(" \n");   loop_count--; /*lnum++;*/ }
    // | statements IF '(' logicalexpr ')' '{' statements '}' ELSE '{' statements '}'        { printf("if-else statement executed \n\n"); }
-    | statements { printf("l%d:\n",lnum); lnum++; } WHILE '(' logicalexpr ')' { printf("if not t%d goto l%d\n",tnum-1,lnum); temproot1 = change_scope( temproot1 ); }  '{' statements '}'                             { display( temproot1 ); temproot1 = temproot1->parent_scope; printf("goto l%d\n",lnum-1);  printf("l%d:\n",lnum); lnum++; }
-    | statements FOR {  temproot1 = change_scope( temproot1 ); } '(' assignexpr ';' { printf("l%d:\n",lnum); lnum++; } logicalexpr ';' { printf("if not t%d goto l%d\n",tnum-1,lnum+2); printf("goto l%d\n",lnum+1); printf("l%d:\n",lnum); lnum++;  } assignexpr { printf("goto l%d\n",lnum-2); printf("l%d:\n",lnum); lnum++; } ')' '{' statements '}' { printf("goto l%d\n",lnum-2); display( temproot1 ); temproot1 = temproot1->parent_scope;  printf("l%d:\n",lnum); lnum++; }
+    | statements { lsn[loop_count] = lnum; loop_count++;    printf("l%d:\n",lnum); lnum++; } WHILE '(' logicalexpr ')' { printf("if not t%d goto l%d\n",tnum-1,lnum); temproot1 = change_scope( temproot1 ); lnum++; }  '{' statements '}'                             { display( temproot1 ); temproot1 = temproot1->parent_scope; printf("goto l%d\n",lsn[loop_count-1]  );  printf("l%d:\n", lsn[loop_count - 1] + 1 ); loop_count--;  }
+    | statements FOR {  temproot1 = change_scope( temproot1 ); } '(' assignexpr ';' { lsn[loop_count] = lnum; loop_count++; lnum_temp = lnum; printf("l%d:\n",lnum);  } logicalexpr ';' { printf("if not t%d goto l%d\n",tnum-1,lnum+3 ); printf("goto l%d\n",lnum+2); printf("l%d:\n",lnum + 1);  } assignexpr { printf("goto l%d\n",lnum); printf("l%d:\n",lnum+2); lnum = lnum + 4; } ')' '{' statements '}' { lnum_temp = lsn[loop_count - 1]; printf("goto l%d\n",lnum_temp + 1); display( temproot1 ); temproot1 = temproot1->parent_scope;  printf("l%d:\n",lnum_temp + 3); loop_count--; }
     | ;
     
 
-IFEL: ELSE {temproot1 = change_scope( temproot1 );  printf("goto l%d\n",lnum+1); printf("l%d:\n",lnum);  lnum++; } '{' statements '}'        { temproot1 = temproot1->parent_scope;  }
-    | {  }
+IFEL: ELSE {temproot1 = change_scope( temproot1 );  printf("goto l%d\n",lsn[ loop_count - 1] + 1); printf("l%d:\n",lsn[ loop_count - 1] );  lnum++; } '{' statements '}'        { temproot1 = temproot1->parent_scope;    printf("l%d:\n", lsn[loop_count - 1] + 1 );   }
+      | { printf("l%d:\n", lsn[loop_count - 1] );  }
     ;
 
 
@@ -101,8 +101,9 @@ expr: NUM                     { printf("t%d = %d\n",tnum,$1); tnum++; }
     | ID '[' expr ']'           { /*printf("t%d = t%d\n",tnum,tnum-1); tnum++;*/ printf("t%d = 4 * t%d\n",tnum,tnum-1); tnum++;  printf("t%d = &%s\n",tnum,$1); tnum++; printf("t%d = t%d + t%d\n",tnum,tnum-1,tnum-2); tnum++;  printf("t%d = *t%d\n", tnum,tnum-1); tnum++;  }
     ;
 
-logicalexpr: NUM                      { printf("t%d = %d\n",tnum,$1); $$=tnum; tnum++; }
-    | ID                              { printf("t%d = %s\n",tnum,$1); $$=tnum; tnum++; if( !lookup_for_id( temproot1 , $1 ) ){ printf("%s is not defined" , $1);  exit(0); }  }
+logicalexpr: /*NUM                      { printf("t%d = %d\n",tnum,$1); $$=tnum; tnum++; }
+    | ID                              { printf("t%d = %s\n",tnum,$1); $$=tnum; tnum++; if( !lookup_for_id( temproot1 , $1 ) ){ printf("%s is not defined" , $1);  exit(0); }  } */
+    expr    { $$=tnum-1; }
     | ID '[' expr ']'                  { if( !lookup_for_id( temproot1 , $1 ) ){ printf("%s is not defined" , $1);  exit(0); } printf("t%d = 4 * t%d\n",tnum,tnum-1); tnum++;  printf("t%d = &%s\n",tnum,$1); tnum++; printf("t%d = t%d + t%d\n",tnum,tnum-1,tnum-2); tnum++;  printf("t%d = *t%d\n", tnum,tnum-1); $$=tnum; tnum++;  }
     | logicalexpr '<' logicalexpr     { printf("t%d = t%d < t%d\n",tnum,$1,$3); tnum++; /*printf("t%d = t%d < t%d\n",tnum,tnum-2,tnum-1); tnum++;*/ }
     | logicalexpr '>' logicalexpr     { printf("t%d = t%d > t%d\n",tnum,$1,$3); tnum++; /*printf("t%d = t%d > t%d\n",tnum,tnum-2,tnum-1); tnum++;*/ }
