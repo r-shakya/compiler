@@ -34,11 +34,7 @@ t22 = id5
 id4 = t22 
 t23 = id3
 id3 = t23 
-id_type == 0
-id_type == 0
-id_type == 0
-id_type == 0
-id_type == 2
-id_type == 2
-id_type == 1
-id_type == 1
+t0         id3
+t21         id6
+t22         id4
+t23         id3

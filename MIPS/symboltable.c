@@ -583,9 +583,25 @@ bool lookup_right_array_id( struct Scope_node* root , char *name ){
 
 
 
+void addicg(char a1[] , char a2[] , char o[] , char rs[] ){
+	strcpy(icg_instrn[instrn_num].arg1 , a1 ) ;
+	strcpy(icg_instrn[instrn_num].arg2 , a2 ) ;
+	strcpy(icg_instrn[instrn_num].op , o )  ;
+	strcpy(icg_instrn[instrn_num].res , rs )  ;
+	strcpy(ag1 , "");
+	strcpy(ag2 , "");
+	strcpy(rs1 , "");
+	instrn_num++;
+}
 
-
-
-
-
-
+void convert(char id[] , int num){  
+    strcpy(gl_str , "");
+    char d[15];
+    sprintf(d, "%d", num);
+    strcat(id,d);
+    strcpy(gl_str , id);
+ }
+    
+    
+    
+    

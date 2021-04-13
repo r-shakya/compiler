@@ -1711,7 +1711,7 @@ yyreduce:
 
   case 45:
 #line 79 "parser.y"
-                                                                                                                                                                                                                                                                                                                  { /* printf("IDENTIFIER %s =  \n",$1); */  printf("id%d = t%d \n",prev_num,tnum - 1);  }
+                                                                                                                                                                                                                                                                               {   sprintf(rs1, "id%d", prev_num);    sprintf(ag1, "t%d", tnum-1); addicg(ag1,"","",rs1);   printf("id%d = t%d \n",prev_num,tnum - 1);  }
 #line 1716 "y.tab.c"
     break;
 
@@ -2119,8 +2119,8 @@ yyreturn:
 int main(int argc,char *argv[]){
   initialize_sym();
   yyparse();
-  for(int i=0;i<id_num;i++){
-  	printf("id_type == %d\n",idntfrs[i]);
+  for(int i=0;i<instrn_num;i++){
+  	printf("%s   %s   %s   %s\n",icg_instrn[i].arg1 ,icg_instrn[i].arg2 ,icg_instrn[i].op ,icg_instrn[i].res  );
   }
 
 }
