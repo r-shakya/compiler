@@ -10,7 +10,6 @@ struct Scope_node {
 };
 
 struct data_node {
-    int  ID_num;
     char ID_Name[20];                  // Name string
     char  data_type[15];     	        // Data_Type       0 -> int , 1 -> char , 2 -> bool , 3 ->float
     char ID_Value[10];			// Value in String
@@ -35,19 +34,6 @@ struct Scope_node* newScope_node()
 }
 
 
-
-int addid(char *data_type){
-	if(data_type[0] == 'i'){
-		idntfrs[id_num] = 0;
-	}
-	else if( data_type[0] == 'f' ){
-		idntfrs[id_num] = 1;	
-	}
-	else{
-		idntfrs[id_num] = 2;	
-	}
-	return idntfrs[id_num];
-}
 
 
 void symb_table_doubling(struct Scope_node* root){
@@ -172,15 +158,7 @@ struct data_node* symbol_copy(char *idname , char *idvalue , char *idtype){
     strcpy( symbol->ID_Value, idvalue );
     //symbol->data_type = idtype;
     //symbol->ID_Name = idname;  //(char *)malloc(sizeof(char)*5);
-    //symbol->ID_Value = idvalue; 
-    
-    if(idtype != ""){
-    printf( "  idname =    %s   , idvalue  =   %s     ,idtype   =  %s  \n ",idname , idvalue , idtype );
-    	symbol->ID_num = addid(idtype);
-    	
-    	id_num++;
-    }
-     
+    //symbol->ID_Value = idvalue;  
     symbol->next = NULL;
     return symbol;
 }
@@ -513,35 +491,3 @@ bool lookup_array_id( struct Scope_node* root , char *name ){
 	}
 	return false;
 }
-
-
-
-
-
-
-void addarrayid(char *data_type , int size){
-	if(data_type[0] == 'i'){
-		idntfrs[id_num] = 0;
-	}
-	else if( data_type[0] == 'f' ){
-		idntfrs[id_num] = 1;	
-	}
-	else{
-		idntfrs[id_num] = 2;	
-	}
-	id_size[id_num] = size;
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-

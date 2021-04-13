@@ -1,0 +1,13 @@
+void main()
+{
+  integer x, y ,z;
+  x = 6;
+  y = 8;
+  if( x < y){
+   integer z,x;
+   x = 12;
+   z = x - y;
+   
+  }
+  z = x + y;
+}

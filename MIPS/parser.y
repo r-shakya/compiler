@@ -38,19 +38,19 @@ declarations: declarations decl ';' {  }
     | declarations typestr ID {   if( lookup( temproot1 , $3  ) ){ printf("Variable named %s exists already\n ",$3); exit( 0 ); } else{ func_node = insert_function( temproot1 , symbol_copy( $3 ,$2 ,""  )  ); func_a = 1; }    temproot1 = change_scope( temproot1 ); } '(' funcdecl ')' { func_a = 0; }  '{' statements '}' { display( temproot1 ); temproot1 = temproot1->parent_scope;   printf("%s function executed with send-type %s \n\n",$3,$2);  } 
     | ;
 
-decl: typestr ID               {strcpy($$,$1);  if( lookup( temproot1 , $2  ) ){ printf("Variable named %s exists already\n ",$2); exit( 0 ); } else{    insert( temproot1 , symbol_copy( $2 ,"" ,$1  )  );    } }
+decl: typestr ID               {strcpy($$,$1);  if( lookup( temproot1 , $2  ) ){ printf("Variable named %s exists already\n ",$2); exit( 0 ); } else{  insert( temproot1 , symbol_copy( $2 ,"" ,$1  )  );    } }
     | typestr ID '=' NUM       {strcpy($$,$1);  if( lookup( temproot1 , $2  ) ){ printf("Variable named %s exists already\n ",$2); exit( 0 ); } else{  insert( temproot1 , symbol_copy( $2 ,"" ,$1  )  );  } }
-    | typestr ID '[' NUM ']'   {strcpy($$,$1);  if( lookup( temproot1 , $2  ) ){ printf("Variable named %s exists already\n ",$2); exit( 0 ); }   else{ id_size[id_num] = $4; insert_array( temproot1 , symbol_copy( $2 ,"" ,$1  ) , $4 );  } }
-    | typestr ID '[' NUM ']' '=' '{' arraylist '}'   {strcpy($$,$1);   if( lookup( temproot1 , $2  ) ){ printf("Variable named %s exists already\n ",$2); exit( 0 ); }   else{ id_size[id_num] = $4;  insert_array( temproot1 , symbol_copy( $2 ,"" ,$1  ) , $4 );  } }
+    | typestr ID '[' NUM ']'   {strcpy($$,$1);  if( lookup( temproot1 , $2  ) ){ printf("Variable named %s exists already\n ",$2); exit( 0 ); }   else{  insert_array( temproot1 , symbol_copy( $2 ,"" ,$1  ) , $4 );  } }
+    | typestr ID '[' NUM ']' '=' '{' arraylist '}'   {strcpy($$,$1);   if( lookup( temproot1 , $2  ) ){ printf("Variable named %s exists already\n ",$2); exit( 0 ); }   else{  insert_array( temproot1 , symbol_copy( $2 ,"" ,$1  ) , $4 );  } }
     | decl ',' ID              {  if( lookup( temproot1 , $3 ) ){ printf( "variable named %s exists already", $3 ); exit(0);  }  else{ insert( temproot1 , symbol_copy( $3 ,"" ,$$  )  ); } }
     | decl ',' ID '=' NUM      {  if( lookup( temproot1 , $3 ) ){ printf( "variable named %s exists already", $3 ); exit(0);  }  else{ insert( temproot1 , symbol_copy( $3 ,"" ,$$  )  ); } }
-    | decl ',' ID '[' NUM ']'  {  if( lookup( temproot1 , $3 ) ){ printf( "variable named %s exists already", $3 ); exit(0);  }  else{ id_size[id_num] = $5;  insert_array( temproot1 , symbol_copy( $3 ,"" ,$$  ) , $5 );   } }
+    | decl ',' ID '[' NUM ']'  {  if( lookup( temproot1 , $3 ) ){ printf( "variable named %s exists already", $3 ); exit(0);  }  else{ insert_array( temproot1 , symbol_copy( $3 ,"" ,$$  ) , $5 );   } }
     | decl ',' ID '[' NUM ']' '=' '{' arraylist '}'  {  if( lookup( temproot1 , $3 ) ){ printf( "variable named %s exists already", $3 ); exit(0);  }  else{ insert_array( temproot1 , symbol_copy( $3 ,"" ,$$  ) , $5 );   } }
     ;
     
     
     
-funcdecl: typestr ID               {strcpy($$,$1);  if( lookup( temproot1 , $2  ) ){ printf("Variable named %s exists already\n ",$2); exit( 0 ); } else{ addid($1); insert( temproot1 , symbol_copy( $2 ,"" ,$1  )  );  if(func_a == 1){ insert_func_param( func_node , $1 ); }   } }
+funcdecl: typestr ID               {strcpy($$,$1);  if( lookup( temproot1 , $2  ) ){ printf("Variable named %s exists already\n ",$2); exit( 0 ); } else{  insert( temproot1 , symbol_copy( $2 ,"" ,$1  )  );  if(func_a == 1){ insert_func_param( func_node , $1 ); }   } }
     | typestr ID '[' ']'   {strcpy($$,$1); printf("array type %s  = %s\n",$1,$2); if( lookup( temproot1 , $2  ) ){ printf("Variable named %s exists already\n ",$2); exit( 0 ); }   else{  insert_array( temproot1 , symbol_copy( $2 ,"" ,$1  ) , 1 ); if(func_a == 1){ strcat($1, "array");  insert_func_param( func_node , $1 ); }  } }
     | funcdecl ',' ID              { printf("var type %s = %s\n",$$,$3); if( lookup( temproot1 , $3 ) ){ printf( "variable named %s exists already", $3 ); exit(0);  }  else{ insert( temproot1 , symbol_copy( $3 ,"" ,$$  )  ); if(func_a == 1){ insert_func_param( func_node , $$ ); } } }
     | funcdecl ',' ID '[' ']'  { printf("array type %s = %s\n",$$,$3); if( lookup( temproot1 , $3 ) ){ printf( "variable named %s exists already", $3 ); exit(0);  }  else{ insert_array( temproot1 , symbol_copy( $3 ,"" ,$$  ) , 1 ); if(func_a == 1){ strcat($$, "array"); insert_func_param( func_node , $$ ); }  } }
@@ -121,10 +121,22 @@ logicalexpr: /*NUM                      { printf("t%d = %d\n",tnum,$1); $$=tnum;
 int main(int argc,char *argv[]){
   initialize_sym();
   yyparse();
-  for(int i=0;i<id_num;i++){
-  	printf("id_type == %d\n",idntfrs[i]);
-  }
-
+  FILE *fptr;
+  	fptr = fopen("output.s","r");
+	int bufferLength = 255;
+	char buffer[bufferLength];
+	while(fgets(buffer, bufferLength, fptr)) {
+	        char  tokens[8][25];
+		char* token = strtok(buffer, " ");
+		int i = 0;
+		while (token != NULL) {
+			tokens[i] = token;
+			i++;
+			token = strtok(NULL, " ");
+		} 
+	    printf("%s\n", buffer);
+	}
+	fclose(fptr);
 }
 
 int yyerror(char *s){
