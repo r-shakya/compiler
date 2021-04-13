@@ -76,10 +76,10 @@ IFEL: ELSE {temproot1 = change_scope( temproot1 );  printf("goto l%d\n",lsn[ loo
 returnstmt: SEND ID                                                       {  if( !lookup_for_id( temproot1 , $2 ) ){ printf("%s is not defined" , $2);  exit(0); } if( strcmp( func_node->ID_Value , leftassign ) != 0 ){ printf( "parameter %s in the function does not match with return type\n",$2 ); exit(0);  } printf("return from function %s\n",$2); }
           ;
 
-assignexpr: ID '=' { if( !lookup_for_id( temproot1 , $1 ) ){ printf("%s is not defined" , $1);  exit(0); } if( leftassignvar[0] != '\0' ){ printf("%s  use of data type is incorrect and is%s\n",$1,leftassignvar); exit(0); }  } expr                                                    { /* printf("IDENTIFIER %s =  \n",$1); */  printf("%s = t%d \n",$1,tnum - 1);  }
-          | ID '=' CALL '(' '"' ID { if( !lookup_for_id( temproot1 , $1 ) ){ printf("%s is not defined" , $1);  exit(0); } if( leftassignvar[0] != '\0' ){ printf("%s  use of data type is incorrect and is%s\n",$1,leftassignvar); exit(0); }  if(!lookup_func_id( temproot1 , $6 ) ){ printf("%s is not defined" , $6);  exit(0); }  var_i = 0;  } '"' ','  paramlist ')'     { printf("%s = send of %s  \n",$1,$6); }
-          | ID '[' expr ']' '=' {  if( !lookup_array_id( temproot1 , $1 ) ){ printf("%s is not defined" , $1);  exit(0); }  printf("t%d = t%d\n",tnum,tnum-1); tnum++; printf("t%d = 4 * t%d\n",tnum,tnum-1); tnum++;  printf("t%d = &%s\n",tnum,$1); tnum++; printf("t%d = t%d + t%d\n",tnum,tnum-1,tnum-2); ar_tnum = tnum; tnum++;   } expr                                         { printf("*t%d = t%d\n",ar_tnum , tnum-1); tnum++;    }
-          | ID '[' expr ']' '=' CALL '(' '"' ID { if( !lookup_array_id( temproot1 , $1  ) ){ printf("%s is not defined" , $1);  exit(0); }   if(!lookup_func_id( temproot1 , $9 ) ){ printf("%s is not defined" , $9);  exit(0); }  var_i = 0; printf("t%d = t%d\n",tnum,tnum-1); tnum++; printf("t%d = 4 * t%d\n",tnum,tnum-1); tnum++;  printf("t%d = &%s\n",tnum,$1); tnum++; printf("t%d = t%d + t%d\n",tnum,tnum-1,tnum-2); ar_tnum = tnum; tnum++;   } '"' ',' paramlist ')'        {   printf("t%d = call %s\n",tnum,$9); tnum++;  printf("*t%d = t%d\n",ar_tnum , tnum-1); tnum++;   }
+assignexpr: ID '=' { if( !lookup_for_id( temproot1 , $1 ) ){ printf("%s is not defined" , $1);  exit(0); } if( leftassignvar[0] != '\0' ){ printf("%s  use of data type is incorrect and is%s\n",$1,leftassignvar); exit(0); }  prev_num = current_num; } expr                                                    { /* printf("IDENTIFIER %s =  \n",$1); */  printf("id%d = t%d \n",prev_num,tnum - 1);  }
+          | ID '=' CALL '(' '"' ID { if( !lookup_for_id( temproot1 , $1 ) ){ printf("%s is not defined" , $1);  exit(0); } if( leftassignvar[0] != '\0' ){ printf("%s  use of data type is incorrect and is%s\n",$1,leftassignvar); exit(0); }  if(!lookup_func_id( temproot1 , $6 ) ){ printf("%s is not defined" , $6);  exit(0); }  var_i = 0;  } '"' ','  paramlist ')'     { printf("id%d = send of %s  \n", current_num ,$6); }
+          | ID '[' expr ']' '=' {  if( !lookup_array_id( temproot1 , $1 ) ){ printf("%s is not defined" , $1);  exit(0); }  printf("t%d = t%d\n",tnum,tnum-1); tnum++; printf("t%d = 4 * t%d\n",tnum,tnum-1); tnum++;  printf("t%d = &id%d\n",tnum, current_num ); tnum++; printf("t%d = t%d + t%d\n",tnum,tnum-1,tnum-2); ar_tnum = tnum; tnum++;   } expr                                         { printf("*t%d = t%d\n",ar_tnum , tnum-1); tnum++;    }
+          | ID '[' expr ']' '=' CALL '(' '"' ID { if( !lookup_array_id( temproot1 , $1  ) ){ printf("%s is not defined" , $1);  exit(0); }   if(!lookup_func_id( temproot1 , $9 ) ){ printf("%s is not defined" , $9);  exit(0); }  var_i = 0; printf("t%d = t%d\n",tnum,tnum-1); tnum++; printf("t%d = 4 * t%d\n",tnum,tnum-1); tnum++;  printf("t%d = &id%d\n",tnum, current_num  ); tnum++; printf("t%d = t%d + t%d\n",tnum,tnum-1,tnum-2); ar_tnum = tnum; tnum++;   } '"' ',' paramlist ')'        {   printf("t%d = call %s\n",tnum,$9); tnum++;  printf("*t%d = t%d\n",ar_tnum , tnum-1); tnum++;   }
           ;
           
 arraylist: NUM                { printf("number %d added in array\n",$1); }
@@ -91,7 +91,7 @@ paramlist: ID                { if( !lookup_for_id( temproot1 , $1 ) ){ printf("%
          ;
 
 expr: NUM                     { printf("t%d = %d\n",tnum,$1); tnum++; }
-    | ID                      { printf("t%d = %s\n",tnum,$1); tnum++; strcpy($$,$1);  if( !lookup_func_id( temproot1 , $1 ) ){ printf("%s is not defined" , $1);  exit(0); }  }
+    | ID                      { strcpy($$,$1);  if( !lookup_func_id( temproot1 , $1 ) ){ printf("%s is not defined" , $1);  exit(0); } printf("t%d = id%d\n",tnum, current_num ); tnum++;   }
     | '(' expr ')'            {  }
     | expr {expression[e_num] = tnum - 1; e_num++; } '/' expr           { e_num--; printf("t%d = t%d / t%d\n",tnum,expression[e_num],tnum-1); tnum++; }
     | expr {expression[e_num] = tnum - 1; e_num++; } '*' expr           { e_num--; printf("t%d = t%d * t%d\n",tnum,expression[e_num],tnum-1); tnum++; }
@@ -100,13 +100,13 @@ expr: NUM                     { printf("t%d = %d\n",tnum,$1); tnum++; }
     
    
     /*| ID '[' NUM ']'          { printf("t%d = %d\n",tnum,$3); tnum++; printf("t%d = 4 * t%d\n",tnum,tnum-1); tnum++;  printf("t%d = &%s\n",tnum,$1); tnum++; printf("t%d = t%d + t%d\n",tnum,tnum-1,tnum-2); tnum++;  printf("t%d = *t%d\n", tnum,tnum-1); tnum++;  }*/
-    | ID '[' expr ']'           { /*printf("t%d = t%d\n",tnum,tnum-1); tnum++;*/ printf("t%d = 4 * t%d\n",tnum,tnum-1); tnum++;  printf("t%d = &%s\n",tnum,$1); tnum++; printf("t%d = t%d + t%d\n",tnum,tnum-1,tnum-2); tnum++;  printf("t%d = *t%d\n", tnum,tnum-1); tnum++;  }
+    | ID '[' expr ']'           { /*printf("t%d = t%d\n",tnum,tnum-1); tnum++;*/ if( !lookup_right_array_id( temproot1 , $1 ) ){ printf("%s is not defined" , $1);  exit(0); }    printf("t%d = 4 * t%d\n",tnum,tnum-1); tnum++;  printf("t%d = &id%d\n",tnum,current_num); tnum++; printf("t%d = t%d + t%d\n",tnum,tnum-1,tnum-2); tnum++;  printf("t%d = *t%d\n", tnum,tnum-1); tnum++;  }
     ;
 
 logicalexpr: /*NUM                      { printf("t%d = %d\n",tnum,$1); $$=tnum; tnum++; }
     | ID                              { printf("t%d = %s\n",tnum,$1); $$=tnum; tnum++; if( !lookup_for_id( temproot1 , $1 ) ){ printf("%s is not defined" , $1);  exit(0); }  } */
     expr    { $$=tnum-1; }
-    | ID '[' expr ']'                  { if( !lookup_for_id( temproot1 , $1 ) ){ printf("%s is not defined" , $1);  exit(0); } printf("t%d = 4 * t%d\n",tnum,tnum-1); tnum++;  printf("t%d = &%s\n",tnum,$1); tnum++; printf("t%d = t%d + t%d\n",tnum,tnum-1,tnum-2); tnum++;  printf("t%d = *t%d\n", tnum,tnum-1); $$=tnum; tnum++;  }
+    | ID '[' expr ']'                  { if( !lookup_for_id( temproot1 , $1 ) ){ printf("%s is not defined" , $1);  exit(0); } printf("t%d = 4 * t%d\n",tnum,tnum-1); tnum++;  printf("t%d = &id%d\n",tnum, current_num); tnum++; printf("t%d = t%d + t%d\n",tnum,tnum-1,tnum-2); tnum++;  printf("t%d = *t%d\n", tnum,tnum-1); $$=tnum; tnum++;  }
     | logicalexpr '<' logicalexpr     { printf("t%d = t%d < t%d\n",tnum,$1,$3); tnum++; /*printf("t%d = t%d < t%d\n",tnum,tnum-2,tnum-1); tnum++;*/ }
     | logicalexpr '>' logicalexpr     { printf("t%d = t%d > t%d\n",tnum,$1,$3); tnum++; /*printf("t%d = t%d > t%d\n",tnum,tnum-2,tnum-1); tnum++;*/ }
     | '(' logicalexpr ')'             {  }

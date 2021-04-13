@@ -34,23 +34,23 @@ program: declarations VOID MAIN { /*temproot1 = lift_scope( temproot1 ); */ temp
        ;
             
 declarations: declarations decl ';' {  }
-    | declarations VOID ID { if( lookup( temproot1 , $3  ) ){ printf("Variable named %s exists already\n ",$3); exit( 0 ); } else{ func_node = insert_function( temproot1 , symbol_copy( $3 ,$2 ,""  )  ); func_a = 1; } temproot1 = change_scope( temproot1 ); } '(' funcdecl ')'  { func_a = 0; }  '{' statements '}'    { display( temproot1 ); temproot1 = temproot1->parent_scope;    printf("%s function executed with send-type %s \n\n",$3,$2); }
-    | declarations typestr ID {   if( lookup( temproot1 , $3  ) ){ printf("Variable named %s exists already\n ",$3); exit( 0 ); } else{ func_node = insert_function( temproot1 , symbol_copy( $3 ,$2 ,""  )  ); func_a = 1; }    temproot1 = change_scope( temproot1 ); } '(' funcdecl ')' { func_a = 0; }  '{' statements '}' { display( temproot1 ); temproot1 = temproot1->parent_scope;   printf("%s function executed with send-type %s \n\n",$3,$2);  } 
+    | declarations VOID ID { if( lookup( temproot1 , $3  ) ){ printf("Variable named %s exists already\n ",$3); exit( 0 ); } else{ func_node = insert_function( temproot1 , symbol_copy( $3 ,$2 ,""  )  ); func_a = 1; } temproot1 = change_scope( temproot1 ); } '(' funcdecl ')'  { func_a = 0; }  '{' statements '}'    {  temproot1 = temproot1->parent_scope;    printf("%s function executed with send-type %s \n\n",$3,$2); }
+    | declarations typestr ID {   if( lookup( temproot1 , $3  ) ){ printf("Variable named %s exists already\n ",$3); exit( 0 ); } else{ func_node = insert_function( temproot1 , symbol_copy( $3 ,$2 ,""  )  ); func_a = 1; }    temproot1 = change_scope( temproot1 ); } '(' funcdecl ')' { func_a = 0; }  '{' statements '}' {  temproot1 = temproot1->parent_scope;   printf("%s function executed with send-type %s \n\n",$3,$2);  } 
     | ;
 
-decl: typestr ID               {strcpy($$,$1);  if( lookup( temproot1 , $2  ) ){ printf("Variable named %s exists already\n ",$2); exit( 0 ); } else{  insert( temproot1 , symbol_copy( $2 ,"" ,$1  )  );    } }
+decl: typestr ID               {strcpy($$,$1);  if( lookup( temproot1 , $2  ) ){ printf("Variable named %s exists already\n ",$2); exit( 0 ); } else{    insert( temproot1 , symbol_copy( $2 ,"" ,$1  )  );    } }
     | typestr ID '=' NUM       {strcpy($$,$1);  if( lookup( temproot1 , $2  ) ){ printf("Variable named %s exists already\n ",$2); exit( 0 ); } else{  insert( temproot1 , symbol_copy( $2 ,"" ,$1  )  );  } }
-    | typestr ID '[' NUM ']'   {strcpy($$,$1);  if( lookup( temproot1 , $2  ) ){ printf("Variable named %s exists already\n ",$2); exit( 0 ); }   else{  insert_array( temproot1 , symbol_copy( $2 ,"" ,$1  ) , $4 );  } }
-    | typestr ID '[' NUM ']' '=' '{' arraylist '}'   {strcpy($$,$1);   if( lookup( temproot1 , $2  ) ){ printf("Variable named %s exists already\n ",$2); exit( 0 ); }   else{  insert_array( temproot1 , symbol_copy( $2 ,"" ,$1  ) , $4 );  } }
+    | typestr ID '[' NUM ']'   {strcpy($$,$1);  if( lookup( temproot1 , $2  ) ){ printf("Variable named %s exists already\n ",$2); exit( 0 ); }   else{ id_size[id_num] = $4; insert_array( temproot1 , symbol_copy( $2 ,"" ,$1  ) , $4 );  } }
+    | typestr ID '[' NUM ']' '=' '{' arraylist '}'   {strcpy($$,$1);   if( lookup( temproot1 , $2  ) ){ printf("Variable named %s exists already\n ",$2); exit( 0 ); }   else{ id_size[id_num] = $4;  insert_array( temproot1 , symbol_copy( $2 ,"" ,$1  ) , $4 );  } }
     | decl ',' ID              {  if( lookup( temproot1 , $3 ) ){ printf( "variable named %s exists already", $3 ); exit(0);  }  else{ insert( temproot1 , symbol_copy( $3 ,"" ,$$  )  ); } }
     | decl ',' ID '=' NUM      {  if( lookup( temproot1 , $3 ) ){ printf( "variable named %s exists already", $3 ); exit(0);  }  else{ insert( temproot1 , symbol_copy( $3 ,"" ,$$  )  ); } }
-    | decl ',' ID '[' NUM ']'  {  if( lookup( temproot1 , $3 ) ){ printf( "variable named %s exists already", $3 ); exit(0);  }  else{ insert_array( temproot1 , symbol_copy( $3 ,"" ,$$  ) , $5 );   } }
+    | decl ',' ID '[' NUM ']'  {  if( lookup( temproot1 , $3 ) ){ printf( "variable named %s exists already", $3 ); exit(0);  }  else{ id_size[id_num] = $5;  insert_array( temproot1 , symbol_copy( $3 ,"" ,$$  ) , $5 );   } }
     | decl ',' ID '[' NUM ']' '=' '{' arraylist '}'  {  if( lookup( temproot1 , $3 ) ){ printf( "variable named %s exists already", $3 ); exit(0);  }  else{ insert_array( temproot1 , symbol_copy( $3 ,"" ,$$  ) , $5 );   } }
     ;
     
     
     
-funcdecl: typestr ID               {strcpy($$,$1);  if( lookup( temproot1 , $2  ) ){ printf("Variable named %s exists already\n ",$2); exit( 0 ); } else{  insert( temproot1 , symbol_copy( $2 ,"" ,$1  )  );  if(func_a == 1){ insert_func_param( func_node , $1 ); }   } }
+funcdecl: typestr ID               {strcpy($$,$1);  if( lookup( temproot1 , $2  ) ){ printf("Variable named %s exists already\n ",$2); exit( 0 ); } else{ addid($1); insert( temproot1 , symbol_copy( $2 ,"" ,$1  )  );  if(func_a == 1){ insert_func_param( func_node , $1 ); }   } }
     | typestr ID '[' ']'   {strcpy($$,$1); printf("array type %s  = %s\n",$1,$2); if( lookup( temproot1 , $2  ) ){ printf("Variable named %s exists already\n ",$2); exit( 0 ); }   else{  insert_array( temproot1 , symbol_copy( $2 ,"" ,$1  ) , 1 ); if(func_a == 1){ strcat($1, "array");  insert_func_param( func_node , $1 ); }  } }
     | funcdecl ',' ID              { printf("var type %s = %s\n",$$,$3); if( lookup( temproot1 , $3 ) ){ printf( "variable named %s exists already", $3 ); exit(0);  }  else{ insert( temproot1 , symbol_copy( $3 ,"" ,$$  )  ); if(func_a == 1){ insert_func_param( func_node , $$ ); } } }
     | funcdecl ',' ID '[' ']'  { printf("array type %s = %s\n",$$,$3); if( lookup( temproot1 , $3 ) ){ printf( "variable named %s exists already", $3 ); exit(0);  }  else{ insert_array( temproot1 , symbol_copy( $3 ,"" ,$$  ) , 1 ); if(func_a == 1){ strcat($$, "array"); insert_func_param( func_node , $$ ); }  } }
@@ -61,10 +61,10 @@ statements: assignexpr ';'                                                      
     | statements assignexpr ';'                                                           {}
     | statements decl ';'                                                                 {}
     | statements returnstmt ';'                                                           {}
-    | statements IF '(' logicalexpr ')' { temproot1 = change_scope( temproot1 ); lsn[loop_count] = lnum; loop_count++;   printf("if not t%d goto l%d\n",tnum-1,lnum); lnum = lnum + 2 ; } '{' statements '}' { temproot1 = temproot1->parent_scope; } IFEL                                { display( temproot1 );  printf(" \n");   loop_count--; /*lnum++;*/ }
+    | statements IF '(' logicalexpr ')' { temproot1 = change_scope( temproot1 ); lsn[loop_count] = lnum; loop_count++;   printf("if not t%d goto l%d\n",tnum-1,lnum); lnum = lnum + 2 ; } '{' statements '}' { temproot1 = temproot1->parent_scope; } IFEL                                {  printf(" \n");   loop_count--; /*lnum++;*/ }
    // | statements IF '(' logicalexpr ')' '{' statements '}' ELSE '{' statements '}'        { printf("if-else statement executed \n\n"); }
-    | statements { lsn[loop_count] = lnum; loop_count++;    printf("l%d:\n",lnum); lnum++; } WHILE '(' logicalexpr ')' { printf("if not t%d goto l%d\n",tnum-1,lnum); temproot1 = change_scope( temproot1 ); lnum++; }  '{' statements '}'                             { display( temproot1 ); temproot1 = temproot1->parent_scope; printf("goto l%d\n",lsn[loop_count-1]  );  printf("l%d:\n", lsn[loop_count - 1] + 1 ); loop_count--;  }
-    | statements FOR {  temproot1 = change_scope( temproot1 ); } '(' assignexpr ';' { lsn[loop_count] = lnum; loop_count++; lnum_temp = lnum; printf("l%d:\n",lnum);  } logicalexpr ';' { printf("if not t%d goto l%d\n",tnum-1,lnum+3 ); printf("goto l%d\n",lnum+2); printf("l%d:\n",lnum + 1);  } assignexpr { printf("goto l%d\n",lnum); printf("l%d:\n",lnum+2); lnum = lnum + 4; } ')' '{' statements '}' { lnum_temp = lsn[loop_count - 1]; printf("goto l%d\n",lnum_temp + 1); display( temproot1 ); temproot1 = temproot1->parent_scope;  printf("l%d:\n",lnum_temp + 3); loop_count--; }
+    | statements { lsn[loop_count] = lnum; loop_count++;    printf("l%d:\n",lnum); lnum++; } WHILE '(' logicalexpr ')' { printf("if not t%d goto l%d\n",tnum-1,lnum); temproot1 = change_scope( temproot1 ); lnum++; }  '{' statements '}'                             {  temproot1 = temproot1->parent_scope; printf("goto l%d\n",lsn[loop_count-1]  );  printf("l%d:\n", lsn[loop_count - 1] + 1 ); loop_count--;  }
+    | statements FOR {  temproot1 = change_scope( temproot1 ); } '(' assignexpr ';' { lsn[loop_count] = lnum; loop_count++; lnum_temp = lnum; printf("l%d:\n",lnum);  } logicalexpr ';' { printf("if not t%d goto l%d\n",tnum-1,lnum+3 ); printf("goto l%d\n",lnum+2); printf("l%d:\n",lnum + 1);  } assignexpr { printf("goto l%d\n",lnum); printf("l%d:\n",lnum+2); lnum = lnum + 4; } ')' '{' statements '}' { lnum_temp = lsn[loop_count - 1]; printf("goto l%d\n",lnum_temp + 1);  temproot1 = temproot1->parent_scope;  printf("l%d:\n",lnum_temp + 3); loop_count--; }
     | ;
     
 
@@ -76,10 +76,10 @@ IFEL: ELSE {temproot1 = change_scope( temproot1 );  printf("goto l%d\n",lsn[ loo
 returnstmt: SEND ID                                                       {  if( !lookup_for_id( temproot1 , $2 ) ){ printf("%s is not defined" , $2);  exit(0); } if( strcmp( func_node->ID_Value , leftassign ) != 0 ){ printf( "parameter %s in the function does not match with return type\n",$2 ); exit(0);  } printf("return from function %s\n",$2); }
           ;
 
-assignexpr: ID '=' { if( !lookup_for_id( temproot1 , $1 ) ){ printf("%s is not defined" , $1);  exit(0); } if( leftassignvar[0] != '\0' ){ printf("%s  use of data type is incorrect and is%s\n",$1,leftassignvar); exit(0); }  } expr                                                    { /* printf("IDENTIFIER %s =  \n",$1); */  printf("%s = t%d \n",$1,tnum - 1);  }
-          | ID '=' CALL '(' '"' ID { if( !lookup_for_id( temproot1 , $1 ) ){ printf("%s is not defined" , $1);  exit(0); } if( leftassignvar[0] != '\0' ){ printf("%s  use of data type is incorrect and is%s\n",$1,leftassignvar); exit(0); }  if(!lookup_func_id( temproot1 , $6 ) ){ printf("%s is not defined" , $6);  exit(0); }  var_i = 0;  } '"' ','  paramlist ')'     { printf("%s = send of %s  \n",$1,$6); }
-          | ID '[' expr ']' '=' {  if( !lookup_array_id( temproot1 , $1 ) ){ printf("%s is not defined" , $1);  exit(0); }  printf("t%d = t%d\n",tnum,tnum-1); tnum++; printf("t%d = 4 * t%d\n",tnum,tnum-1); tnum++;  printf("t%d = &%s\n",tnum,$1); tnum++; printf("t%d = t%d + t%d\n",tnum,tnum-1,tnum-2); ar_tnum = tnum; tnum++;   } expr                                         { printf("*t%d = t%d\n",ar_tnum , tnum-1); tnum++;    }
-          | ID '[' expr ']' '=' CALL '(' '"' ID { if( !lookup_array_id( temproot1 , $1  ) ){ printf("%s is not defined" , $1);  exit(0); }   if(!lookup_func_id( temproot1 , $9 ) ){ printf("%s is not defined" , $9);  exit(0); }  var_i = 0; printf("t%d = t%d\n",tnum,tnum-1); tnum++; printf("t%d = 4 * t%d\n",tnum,tnum-1); tnum++;  printf("t%d = &%s\n",tnum,$1); tnum++; printf("t%d = t%d + t%d\n",tnum,tnum-1,tnum-2); ar_tnum = tnum; tnum++;   } '"' ',' paramlist ')'        {   printf("t%d = call %s\n",tnum,$9); tnum++;  printf("*t%d = t%d\n",ar_tnum , tnum-1); tnum++;   }
+assignexpr: ID '=' { if( !lookup_for_id( temproot1 , $1 ) ){ printf("%s is not defined" , $1);  exit(0); } if( leftassignvar[0] != '\0' ){ printf("%s  use of data type is incorrect and is%s\n",$1,leftassignvar); exit(0); }  prev_num = current_num; } expr                                                    { /* printf("IDENTIFIER %s =  \n",$1); */  printf("id%d = t%d \n",prev_num,tnum - 1);  }
+          | ID '=' CALL '(' '"' ID { if( !lookup_for_id( temproot1 , $1 ) ){ printf("%s is not defined" , $1);  exit(0); } if( leftassignvar[0] != '\0' ){ printf("%s  use of data type is incorrect and is%s\n",$1,leftassignvar); exit(0); }  if(!lookup_func_id( temproot1 , $6 ) ){ printf("%s is not defined" , $6);  exit(0); }  var_i = 0;  } '"' ','  paramlist ')'     { printf("id%d = send of %s  \n", current_num ,$6); }
+          | ID '[' expr ']' '=' {  if( !lookup_array_id( temproot1 , $1 ) ){ printf("%s is not defined" , $1);  exit(0); }  printf("t%d = t%d\n",tnum,tnum-1); tnum++; printf("t%d = 4 * t%d\n",tnum,tnum-1); tnum++;  printf("t%d = &id%d\n",tnum, current_num ); tnum++; printf("t%d = t%d + t%d\n",tnum,tnum-1,tnum-2); ar_tnum = tnum; tnum++;   } expr                                         { printf("*t%d = t%d\n",ar_tnum , tnum-1); tnum++;    }
+          | ID '[' expr ']' '=' CALL '(' '"' ID { if( !lookup_array_id( temproot1 , $1  ) ){ printf("%s is not defined" , $1);  exit(0); }   if(!lookup_func_id( temproot1 , $9 ) ){ printf("%s is not defined" , $9);  exit(0); }  var_i = 0; printf("t%d = t%d\n",tnum,tnum-1); tnum++; printf("t%d = 4 * t%d\n",tnum,tnum-1); tnum++;  printf("t%d = &id%d\n",tnum, current_num  ); tnum++; printf("t%d = t%d + t%d\n",tnum,tnum-1,tnum-2); ar_tnum = tnum; tnum++;   } '"' ',' paramlist ')'        {   printf("t%d = call %s\n",tnum,$9); tnum++;  printf("*t%d = t%d\n",ar_tnum , tnum-1); tnum++;   }
           ;
           
 arraylist: NUM                { printf("number %d added in array\n",$1); }
@@ -91,7 +91,7 @@ paramlist: ID                { if( !lookup_for_id( temproot1 , $1 ) ){ printf("%
          ;
 
 expr: NUM                     { printf("t%d = %d\n",tnum,$1); tnum++; }
-    | ID                      { printf("t%d = %s\n",tnum,$1); tnum++; strcpy($$,$1);  if( !lookup_func_id( temproot1 , $1 ) ){ printf("%s is not defined" , $1);  exit(0); }  }
+    | ID                      { strcpy($$,$1);  if( !lookup_func_id( temproot1 , $1 ) ){ printf("%s is not defined" , $1);  exit(0); } printf("t%d = id%d\n",tnum, current_num ); tnum++;   }
     | '(' expr ')'            {  }
     | expr {expression[e_num] = tnum - 1; e_num++; } '/' expr           { e_num--; printf("t%d = t%d / t%d\n",tnum,expression[e_num],tnum-1); tnum++; }
     | expr {expression[e_num] = tnum - 1; e_num++; } '*' expr           { e_num--; printf("t%d = t%d * t%d\n",tnum,expression[e_num],tnum-1); tnum++; }
@@ -100,13 +100,13 @@ expr: NUM                     { printf("t%d = %d\n",tnum,$1); tnum++; }
     
    
     /*| ID '[' NUM ']'          { printf("t%d = %d\n",tnum,$3); tnum++; printf("t%d = 4 * t%d\n",tnum,tnum-1); tnum++;  printf("t%d = &%s\n",tnum,$1); tnum++; printf("t%d = t%d + t%d\n",tnum,tnum-1,tnum-2); tnum++;  printf("t%d = *t%d\n", tnum,tnum-1); tnum++;  }*/
-    | ID '[' expr ']'           { /*printf("t%d = t%d\n",tnum,tnum-1); tnum++;*/ printf("t%d = 4 * t%d\n",tnum,tnum-1); tnum++;  printf("t%d = &%s\n",tnum,$1); tnum++; printf("t%d = t%d + t%d\n",tnum,tnum-1,tnum-2); tnum++;  printf("t%d = *t%d\n", tnum,tnum-1); tnum++;  }
+    | ID '[' expr ']'           { /*printf("t%d = t%d\n",tnum,tnum-1); tnum++;*/ if( !lookup_right_array_id( temproot1 , $1 ) ){ printf("%s is not defined" , $1);  exit(0); }    printf("t%d = 4 * t%d\n",tnum,tnum-1); tnum++;  printf("t%d = &id%d\n",tnum,current_num); tnum++; printf("t%d = t%d + t%d\n",tnum,tnum-1,tnum-2); tnum++;  printf("t%d = *t%d\n", tnum,tnum-1); tnum++;  }
     ;
 
 logicalexpr: /*NUM                      { printf("t%d = %d\n",tnum,$1); $$=tnum; tnum++; }
     | ID                              { printf("t%d = %s\n",tnum,$1); $$=tnum; tnum++; if( !lookup_for_id( temproot1 , $1 ) ){ printf("%s is not defined" , $1);  exit(0); }  } */
     expr    { $$=tnum-1; }
-    | ID '[' expr ']'                  { if( !lookup_for_id( temproot1 , $1 ) ){ printf("%s is not defined" , $1);  exit(0); } printf("t%d = 4 * t%d\n",tnum,tnum-1); tnum++;  printf("t%d = &%s\n",tnum,$1); tnum++; printf("t%d = t%d + t%d\n",tnum,tnum-1,tnum-2); tnum++;  printf("t%d = *t%d\n", tnum,tnum-1); $$=tnum; tnum++;  }
+    | ID '[' expr ']'                  { if( !lookup_for_id( temproot1 , $1 ) ){ printf("%s is not defined" , $1);  exit(0); } printf("t%d = 4 * t%d\n",tnum,tnum-1); tnum++;  printf("t%d = &id%d\n",tnum, current_num); tnum++; printf("t%d = t%d + t%d\n",tnum,tnum-1,tnum-2); tnum++;  printf("t%d = *t%d\n", tnum,tnum-1); $$=tnum; tnum++;  }
     | logicalexpr '<' logicalexpr     { printf("t%d = t%d < t%d\n",tnum,$1,$3); tnum++; /*printf("t%d = t%d < t%d\n",tnum,tnum-2,tnum-1); tnum++;*/ }
     | logicalexpr '>' logicalexpr     { printf("t%d = t%d > t%d\n",tnum,$1,$3); tnum++; /*printf("t%d = t%d > t%d\n",tnum,tnum-2,tnum-1); tnum++;*/ }
     | '(' logicalexpr ')'             {  }
@@ -121,22 +121,10 @@ logicalexpr: /*NUM                      { printf("t%d = %d\n",tnum,$1); $$=tnum;
 int main(int argc,char *argv[]){
   initialize_sym();
   yyparse();
-  FILE *fptr;
-  	fptr = fopen("output.s","r");
-	int bufferLength = 255;
-	char buffer[bufferLength];
-	while(fgets(buffer, bufferLength, fptr)) {
-	        char  tokens[8][25];
-		char* token = strtok(buffer, " ");
-		int i = 0;
-		while (token != NULL) {
-			tokens[i] = token;
-			i++;
-			token = strtok(NULL, " ");
-		} 
-	    printf("%s\n", buffer);
-	}
-	fclose(fptr);
+  for(int i=0;i<id_num;i++){
+  	printf("id_type == %d\n",idntfrs[i]);
+  }
+
 }
 
 int yyerror(char *s){

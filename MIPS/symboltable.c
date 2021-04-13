@@ -10,6 +10,7 @@ struct Scope_node {
 };
 
 struct data_node {
+    int  ID_num;
     char ID_Name[20];                  // Name string
     char  data_type[15];     	        // Data_Type       0 -> int , 1 -> char , 2 -> bool , 3 ->float
     char ID_Value[10];			// Value in String
@@ -34,6 +35,18 @@ struct Scope_node* newScope_node()
 }
 
 
+
+void addid(char *data_type){
+	if(data_type[0] == 'i'){
+		idntfrs[id_num] = 0;
+	}
+	else if( data_type[0] == 'f' ){
+		idntfrs[id_num] = 1;	
+	}
+	else{
+		idntfrs[id_num] = 2;	
+	}
+}
 
 
 void symb_table_doubling(struct Scope_node* root){
@@ -158,7 +171,16 @@ struct data_node* symbol_copy(char *idname , char *idvalue , char *idtype){
     strcpy( symbol->ID_Value, idvalue );
     //symbol->data_type = idtype;
     //symbol->ID_Name = idname;  //(char *)malloc(sizeof(char)*5);
-    //symbol->ID_Value = idvalue;  
+    //symbol->ID_Value = idvalue; 
+    
+    if(idtype != ""){
+    printf( "  idname =    %s   , idvalue  =   %s     ,idtype   =  %s  \n ",idname , idvalue , idtype );
+    	symbol->ID_num = id_num;
+    	addid(idtype);
+    	
+    	id_num++;
+    }
+     
     symbol->next = NULL;
     return symbol;
 }
@@ -281,14 +303,14 @@ void initialize_sym(){
 }
 
 struct Scope_node* change_scope(struct Scope_node* root ){
-	display( root );
+	//display( root );
 	struct Scope_node* root_child = newScope_node();
 	root_child->parent_scope = root;
 	return root_child;
 }
 
 struct Scope_node* lift_scope(struct Scope_node* root ){
-	display( root );
+	//display( root );
 	struct Scope_node* root_child = newScope_node();
 	root_child->parent_scope = root->parent_scope ;
 	return root_child;
@@ -330,7 +352,7 @@ bool lookup( struct Scope_node* root , char *name ){
 					strcpy(leftassign , temp->data_type);
 					//strcpy(ar , temp->ID_Var);
 					strcpy(leftassignvar ,temp->ID_Var);
-					
+					current_num = temp->ID_num;
 					return true;
 				}
         		}
@@ -402,6 +424,7 @@ bool lookup_func( struct Scope_node* root , char *name ){
 							exit(0);
 						}
 					}
+					current_num = temp->ID_num;
 					return true;
 				}
         		}
@@ -468,6 +491,7 @@ bool lookup_array( struct Scope_node* root , char *name  ){
 						exit(0);					
 					}
 					*/
+					current_num = temp->ID_num;
 					return true;
 				}
         		}
@@ -491,3 +515,77 @@ bool lookup_array_id( struct Scope_node* root , char *name ){
 	}
 	return false;
 }
+
+
+
+
+bool lookup_right_array( struct Scope_node* root , char *name  ){
+        long int name_len = strlen(name);
+        int sum_ = 0; int mul = 1;
+        //char name_ar
+        for(int j=0;j<name_len;j++){
+        	
+        	sum_ = sum_ +  ((int)name[j]*mul) % root->symb_tbl_size;
+        	mul *= 2; 
+        }
+        sum_ = sum_ % root->symb_tbl_size;
+        if(root->symbol_table[sum_]  != NULL){
+       	struct data_node *temp = root->symbol_table[sum_];
+        	while(temp != NULL){ 
+        		
+        		//printf("\n \n string id  :: %ld  \n \n",name_len );
+        		long int size_id = strlen( temp->ID_Name );
+        		if( name_len == size_id ){
+				int i = 0;
+				bool isequal = true;
+				while(i < name_len  && isequal){
+					if( temp->ID_Name[i] != name[i] ){
+						isequal = false;
+					}
+					//printf("\n \n %c  %c \n \n", temp->ID_Name[i]  , name[i] );
+					i++;
+				}
+				
+				//printf("\n \n string id  %s  \n \n",name);
+				if( isequal ){
+					strcpy(leftassignvar ,temp->ID_Var);
+					if( strcmp(leftassignvar , "array" ) != 0 ){ printf("%s  use of data type is incorrect %s \n",name,leftassignvar); exit(0); }
+					
+						if( strcmp(leftassign , temp->data_type) != 0 ){
+							printf("\n %s variable type does not match with left assignment\n",temp->ID_Name);
+							printf("\nleftassign data type -%s, right assignment data type -%s\n", leftassign , temp->data_type);
+							exit(0);
+						}
+					current_num = temp->ID_num;
+					return true;
+				}
+        		}
+        		temp = temp->next;
+        	}
+        	return false;
+        }
+	else{
+		return false;
+        }
+
+}
+
+bool lookup_right_array_id( struct Scope_node* root , char *name ){
+	while(root){
+	//printf("1st scope \n");
+		if(lookup_right_array(root , name  )){
+			return true;
+		}
+		root = root->parent_scope;
+	}
+	return false;
+}
+
+
+
+
+
+
+
+
+

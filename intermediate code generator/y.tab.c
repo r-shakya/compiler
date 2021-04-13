@@ -1705,13 +1705,13 @@ yyreduce:
 
   case 44:
 #line 79 "parser.y"
-                   { if( !lookup_for_id( temproot1 , (yyvsp[-1].string) ) ){ printf("%s is not defined" , (yyvsp[-1].string));  exit(0); } if( leftassignvar[0] != '\0' ){ printf("%s  use of data type is incorrect and is%s\n",(yyvsp[-1].string),leftassignvar); exit(0); }  }
+                   { if( !lookup_for_id( temproot1 , (yyvsp[-1].string) ) ){ printf("%s is not defined" , (yyvsp[-1].string));  exit(0); } if( leftassignvar[0] != '\0' ){ printf("%s  use of data type is incorrect and is%s\n",(yyvsp[-1].string),leftassignvar); exit(0); }  prev_num = current_num; }
 #line 1710 "y.tab.c"
     break;
 
   case 45:
 #line 79 "parser.y"
-                                                                                                                                                                                                                                                                                          { /* printf("IDENTIFIER %s =  \n",$1); */  printf("%s = t%d \n",(yyvsp[-3].string),tnum - 1);  }
+                                                                                                                                                                                                                                                                                                                  { /* printf("IDENTIFIER %s =  \n",$1); */  printf("id%d = t%d \n",prev_num,tnum - 1);  }
 #line 1716 "y.tab.c"
     break;
 
@@ -1723,31 +1723,31 @@ yyreduce:
 
   case 47:
 #line 80 "parser.y"
-                                                                                                                                                                                                                                                                                                                                                                                { printf("%s = send of %s  \n",(yyvsp[-10].string),(yyvsp[-5].string)); }
+                                                                                                                                                                                                                                                                                                                                                                                { printf("id%d = send of %s  \n", current_num ,(yyvsp[-5].string)); }
 #line 1728 "y.tab.c"
     break;
 
   case 48:
 #line 81 "parser.y"
-                                {  if( !lookup_array_id( temproot1 , (yyvsp[-4].string) ) ){ printf("%s is not defined" , (yyvsp[-4].string));  exit(0); }  printf("t%d = t%d\n",tnum,tnum-1); tnum++; printf("t%d = 4 * t%d\n",tnum,tnum-1); tnum++;  printf("t%d = &%s\n",tnum,(yyvsp[-4].string)); tnum++; printf("t%d = t%d + t%d\n",tnum,tnum-1,tnum-2); ar_tnum = tnum; tnum++;   }
+                                {  if( !lookup_array_id( temproot1 , (yyvsp[-4].string) ) ){ printf("%s is not defined" , (yyvsp[-4].string));  exit(0); }  printf("t%d = t%d\n",tnum,tnum-1); tnum++; printf("t%d = 4 * t%d\n",tnum,tnum-1); tnum++;  printf("t%d = &id%d\n",tnum, current_num ); tnum++; printf("t%d = t%d + t%d\n",tnum,tnum-1,tnum-2); ar_tnum = tnum; tnum++;   }
 #line 1734 "y.tab.c"
     break;
 
   case 49:
 #line 81 "parser.y"
-                                                                                                                                                                                                                                                                                                                                                                                       { printf("*t%d = t%d\n",ar_tnum , tnum-1); tnum++;    }
+                                                                                                                                                                                                                                                                                                                                                                                                    { printf("*t%d = t%d\n",ar_tnum , tnum-1); tnum++;    }
 #line 1740 "y.tab.c"
     break;
 
   case 50:
 #line 82 "parser.y"
-                                                { if( !lookup_array_id( temproot1 , (yyvsp[-8].string)  ) ){ printf("%s is not defined" , (yyvsp[-8].string));  exit(0); }   if(!lookup_func_id( temproot1 , (yyvsp[0].string) ) ){ printf("%s is not defined" , (yyvsp[0].string));  exit(0); }  var_i = 0; printf("t%d = t%d\n",tnum,tnum-1); tnum++; printf("t%d = 4 * t%d\n",tnum,tnum-1); tnum++;  printf("t%d = &%s\n",tnum,(yyvsp[-8].string)); tnum++; printf("t%d = t%d + t%d\n",tnum,tnum-1,tnum-2); ar_tnum = tnum; tnum++;   }
+                                                { if( !lookup_array_id( temproot1 , (yyvsp[-8].string)  ) ){ printf("%s is not defined" , (yyvsp[-8].string));  exit(0); }   if(!lookup_func_id( temproot1 , (yyvsp[0].string) ) ){ printf("%s is not defined" , (yyvsp[0].string));  exit(0); }  var_i = 0; printf("t%d = t%d\n",tnum,tnum-1); tnum++; printf("t%d = 4 * t%d\n",tnum,tnum-1); tnum++;  printf("t%d = &id%d\n",tnum, current_num  ); tnum++; printf("t%d = t%d + t%d\n",tnum,tnum-1,tnum-2); ar_tnum = tnum; tnum++;   }
 #line 1746 "y.tab.c"
     break;
 
   case 51:
 #line 82 "parser.y"
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          {   printf("t%d = call %s\n",tnum,(yyvsp[-5].string)); tnum++;  printf("*t%d = t%d\n",ar_tnum , tnum-1); tnum++;   }
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        {   printf("t%d = call %s\n",tnum,(yyvsp[-5].string)); tnum++;  printf("*t%d = t%d\n",ar_tnum , tnum-1); tnum++;   }
 #line 1752 "y.tab.c"
     break;
 
@@ -1783,7 +1783,7 @@ yyreduce:
 
   case 57:
 #line 94 "parser.y"
-                              { printf("t%d = %s\n",tnum,(yyvsp[0].string)); tnum++; strcpy((yyval.string),(yyvsp[0].string));  if( !lookup_func_id( temproot1 , (yyvsp[0].string) ) ){ printf("%s is not defined" , (yyvsp[0].string));  exit(0); }  }
+                              { strcpy((yyval.string),(yyvsp[0].string));  if( !lookup_func_id( temproot1 , (yyvsp[0].string) ) ){ printf("%s is not defined" , (yyvsp[0].string));  exit(0); } printf("t%d = id%d\n",tnum, current_num ); tnum++;   }
 #line 1788 "y.tab.c"
     break;
 
@@ -1843,7 +1843,7 @@ yyreduce:
 
   case 67:
 #line 103 "parser.y"
-                                { /*printf("t%d = t%d\n",tnum,tnum-1); tnum++;*/ printf("t%d = 4 * t%d\n",tnum,tnum-1); tnum++;  printf("t%d = &%s\n",tnum,(yyvsp[-3].string)); tnum++; printf("t%d = t%d + t%d\n",tnum,tnum-1,tnum-2); tnum++;  printf("t%d = *t%d\n", tnum,tnum-1); tnum++;  }
+                                { /*printf("t%d = t%d\n",tnum,tnum-1); tnum++;*/ if( !lookup_right_array_id( temproot1 , (yyvsp[-3].string) ) ){ printf("%s is not defined" , (yyvsp[-3].string));  exit(0); }    printf("t%d = 4 * t%d\n",tnum,tnum-1); tnum++;  printf("t%d = &id%d\n",tnum,current_num); tnum++; printf("t%d = t%d + t%d\n",tnum,tnum-1,tnum-2); tnum++;  printf("t%d = *t%d\n", tnum,tnum-1); tnum++;  }
 #line 1848 "y.tab.c"
     break;
 
@@ -1855,7 +1855,7 @@ yyreduce:
 
   case 69:
 #line 109 "parser.y"
-                                       { if( !lookup_for_id( temproot1 , (yyvsp[-3].string) ) ){ printf("%s is not defined" , (yyvsp[-3].string));  exit(0); } printf("t%d = 4 * t%d\n",tnum,tnum-1); tnum++;  printf("t%d = &%s\n",tnum,(yyvsp[-3].string)); tnum++; printf("t%d = t%d + t%d\n",tnum,tnum-1,tnum-2); tnum++;  printf("t%d = *t%d\n", tnum,tnum-1); (yyval.number)=tnum; tnum++;  }
+                                       { if( !lookup_for_id( temproot1 , (yyvsp[-3].string) ) ){ printf("%s is not defined" , (yyvsp[-3].string));  exit(0); } printf("t%d = 4 * t%d\n",tnum,tnum-1); tnum++;  printf("t%d = &id%d\n",tnum, current_num); tnum++; printf("t%d = t%d + t%d\n",tnum,tnum-1,tnum-2); tnum++;  printf("t%d = *t%d\n", tnum,tnum-1); (yyval.number)=tnum; tnum++;  }
 #line 1860 "y.tab.c"
     break;
 
