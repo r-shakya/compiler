@@ -1,72 +1,123 @@
-	.file	"tess.c"
-	.text
-	.globl	main
-	.type	main, @function
+
+.data
+id0:
+	.space 12;
+id1:
+	.word 0;
+id2:
+	.word 0;
+id3:
+	.word 0;
+id4:
+	.word 0;
+.text
+.globl main
 main:
-.LFB0:
-	.cfi_startproc
-	endbr64
-	pushq	%rbp
-	.cfi_def_cfa_offset 16
-	.cfi_offset 6, -16
-	movq	%rsp, %rbp
-	.cfi_def_cfa_register 6
-	subq	$432, %rsp
-	movq	%fs:40, %rax
-	movq	%rax, -8(%rbp)
-	xorl	%eax, %eax
-	movl	$12, -424(%rbp)
-	movl	$0, -428(%rbp)
-	jmp	.L2
-.L5:
-	movl	-432(%rbp), %eax
-	cmpl	-420(%rbp), %eax
-	jge	.L3
-	movl	$2, -428(%rbp)
-	movl	-420(%rbp), %eax
-	cmpl	-428(%rbp), %eax
-	jge	.L4
-	movl	$67, -428(%rbp)
-	jmp	.L4
-.L3:
-	movl	-428(%rbp), %eax
-	subl	-420(%rbp), %eax
-	movl	%eax, -432(%rbp)
-.L4:
-	addl	$1, -428(%rbp)
-.L2:
-	movl	-424(%rbp), %eax
-	subl	$1, %eax
-	cmpl	%eax, -428(%rbp)
-	jl	.L5
-	movl	$1, -424(%rbp)
-	movl	$0, %eax
-	movq	-8(%rbp), %rdx
-	xorq	%fs:40, %rdx
-	je	.L7
-	call	__stack_chk_fail@PLT
-.L7:
-	leave
-	.cfi_def_cfa 7, 8
-	ret
-	.cfi_endproc
-.LFE0:
-	.size	main, .-main
-	.ident	"GCC: (Ubuntu 9.3.0-17ubuntu1~20.04) 9.3.0"
-	.section	.note.GNU-stack,"",@progbits
-	.section	.note.gnu.property,"a"
-	.align 8
-	.long	 1f - 0f
-	.long	 4f - 1f
-	.long	 5
-0:
-	.string	 "GNU"
-1:
-	.align 8
-	.long	 0xc0000002
-	.long	 3f - 2f
-2:
-	.long	 0x3
-3:
-	.align 8
-4:
+li $t0, 3
+sw $t0 , id1
+li $t1, 0
+sw $t1 , id2
+l0:
+lw $t2, id2
+lw $t3, id1
+slt $t4 , $t2 , $t3
+beq $t4 , $zero , l3 
+j l2
+l1:
+lw $t5, id2
+li $t6, 1
+add $t7 , $t5 , $t6
+sw $t7 , id2
+j l0
+l2:
+lw $t8, id2
+sll $t9 , $t8 , 2
+la $t0 , id0
+add $t1 , $t0 , $t9
+li $t2, 6
+lw $t3, id2
+sub $t4 , $t2 , $t3
+sw $t4 , 0($t1)
+j l1
+l3:
+li $t5, 0
+sw $t5 , id2
+l4:
+lw $t6, id2
+lw $t7, id1
+li $t8, 1
+sub $t9 , $t7 , $t8
+slt $t0 , $t6 , $t9
+beq $t0 , $zero , l7 
+j l6
+l5:
+lw $t1, id2
+li $t2, 1
+add $t3 , $t1 , $t2
+sw $t3 , id2
+j l4
+l6:
+li $t4, 0
+sw $t4 , id3
+l8:
+lw $t5, id3
+lw $t6, id1
+lw $t7, id2
+li $t8, 1
+sub $t9 , $t7 , $t8
+sub $t0 , $t6 , $t9
+slt $t1 , $t5 , $t0
+beq $t1 , $zero , l11 
+j l10
+l9:
+lw $t2, id3
+li $t3, 1
+add $t4 , $t2 , $t3
+sw $t4 , id3
+j l8
+l10:
+lw $t5, id3
+sll $t6 , $t5 , 2
+la $t7 , id0
+add $t8 , $t7 , $t6
+lw $t9 , 0($t8)
+lw $t0, id3
+li $t1, 1
+add $t2 , $t0 , $t1
+sll $t3 , $t2 , 2
+la $t4 , id0
+add $t5 , $t4 , $t3
+lw $t6 , 0($t5)
+sgt $t7 , $t9 , $t6
+beq $t7 , $zero , l12 
+lw $t8, id3
+sll $t9 , $t8 , 2
+la $t0 , id0
+add $t1 , $t0 , $t9
+lw $t2 , 0($t1)
+sw $t2 , id4
+lw $t3, id3
+sll $t4 , $t3 , 2
+la $t5 , id0
+add $t6 , $t5 , $t4
+lw $t7, id3
+li $t8, 1
+add $t9 , $t7 , $t8
+sll $t0 , $t9 , 2
+la $t1 , id0
+add $t2 , $t1 , $t0
+lw $t3 , 0($t2)
+sw $t3 , 0($t6)
+lw $t4, id3
+li $t5, 1
+add $t6 , $t4 , $t5
+sll $t7 , $t6 , 2
+la $t8 , id0
+add $t9 , $t8 , $t7
+lw $t0, id4
+sw $t0 , 0($t9)
+l12:
+j l9
+l11:
+j l5
+l7:

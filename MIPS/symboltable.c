@@ -174,7 +174,7 @@ struct data_node* symbol_copy(char *idname , char *idvalue , char *idtype){
     //symbol->ID_Value = idvalue; 
     
     if(idtype != ""){
-    printf( "  idname =    %s   , idvalue  =   %s     ,idtype   =  %s  \n ",idname , idvalue , idtype );
+   // printf( "  idname =    %s   , idvalue  =   %s     ,idtype   =  %s  \n ",idname , idvalue , idtype );
     	symbol->ID_num = id_num;
     	addid(idtype);
     	
@@ -192,6 +192,7 @@ void insert_array(struct Scope_node* root , struct data_node* temp1 , int num ){
         char *name = temp1->ID_Name;
         //strcat(temp1->data_type, "array");
         strcat(temp1->ID_Var , "array");
+        idntfrs[id_num - 1] = 3;
         sprintf(temp1->ID_Value, "%d", num);
         
         //temp1->ID_Value
@@ -601,6 +602,198 @@ void convert(char id[] , int num){
     strcat(id,d);
     strcpy(gl_str , id);
  }
+    
+    
+int st_i(char str1[]){
+    char str2[15] ;
+    strncpy(str2,  str1 + 1,strlen(str1) - 1);
+    str2[strlen(str1) - 1] = '\0';
+    int x;
+    sscanf(str2, "%d", &x);
+    return x;
+}  
+        
+        
+void add_data(){
+	for(int i=0;i<id_num;i++){
+		int num = idntfrs[i];
+		if( num == 0){
+			printf("id%d:\n\t",i);
+			printf(".word 0;\n");
+		}
+		else if( num == 3){
+			printf("id%d:\n\t",i);
+			printf(".space %d;\n" , 4*id_size[i]);
+		}
+	}
+	
+	
+}
+    
+void icg_to_mips(){
+	//displ_mips();
+	int reg = 0;
+	int tv[250];
+	printf("\n\n\n\n.data\n");
+	add_data();
+	printf(".text\n.globl main\nmain:\n");
+	for(int i=0;i<instrn_num;i++){
+		char r1[15] ;
+		char r2[15] ;
+		char o[15] ;
+		char r[15] ;
+		strcpy(r1 , icg_instrn[i].arg1 );
+		strcpy(r2 , icg_instrn[i].arg2 );
+		strcpy(o , icg_instrn[i].op );
+		strcpy(r , icg_instrn[i].res );
+		if( reg == 10 ){
+				reg = 0;
+		}
+		
+		
+		if(strcmp(o,"") == 0 ){
+			if( r[0] == 't' ){
+				if(r1[0] == 'i'){
+					printf("lw $t%d, %s\n",reg,r1);
+				}
+				else{
+					printf("li $t%d, %s\n",reg,r1);
+				}
+				int tnum = st_i(r);
+				tv[tnum] = reg;
+				reg++;
+			}
+			else if( r[0] == 'i' ){
+				int tnum = st_i(r1);
+				printf("sw $t%d , %s\n" , tv[tnum] , r );
+			}
+		}
+		else if( strcmp(o,"beq") == 0  ){
+			int num_a1 = st_i(r1);
+			printf( "beq $t%d , $zero , %s \n",tv[num_a1] , r );
+		}
+		else if(o[0] == '+'){
+			int num_a1 = st_i(r1);
+			int num_a2 = st_i(r2);
+			printf("add $t%d , $t%d , $t%d\n" , reg , tv[num_a1] , tv[num_a2] );
+			int tnum = st_i(r);
+			tv[tnum] = reg;
+			reg++;
+		}
+		else if(o[0] == '-'){
+			int num_a1 = st_i(r1);
+			int num_a2 = st_i(r2);
+			printf("sub $t%d , $t%d , $t%d\n" , reg , tv[num_a1] , tv[num_a2] );
+			int tnum = st_i(r);
+			tv[tnum] = reg;
+			reg++;
+		}
+		else if(o[0] == '*'){
+		
+			if(r1[0] == '4'){
+				int num_a2 = st_i(r2);
+				printf("sll $t%d , $t%d , 2\n" , reg ,  tv[num_a2] );
+				int tnum = st_i(r);
+				tv[tnum] = reg;
+				reg++;
+			
+			}
+			else{
+				int num_a1 = st_i(r1);
+				int num_a2 = st_i(r2);
+				printf("mul $t%d , $t%d , $t%d\n" , reg , tv[num_a1] , tv[num_a2] );
+				int tnum = st_i(r);
+				tv[tnum] = reg;
+				reg++;
+			}
+		}
+		else if(o[0] == '/'){
+			int num_a1 = st_i(r1);
+			int num_a2 = st_i(r2);
+			printf("div $t%d , $t%d , $t%d\n" , reg , tv[num_a1] , tv[num_a2] );
+			int tnum = st_i(r);
+			tv[tnum] = reg;
+			reg++;
+		}
+		
+		else if(o[0] == '<'){
+			int num_a1 = st_i(r1);
+			int num_a2 = st_i(r2);
+			printf("slt $t%d , $t%d , $t%d\n" , reg , tv[num_a1] , tv[num_a2] );
+			int tnum = st_i(r);
+			tv[tnum] = reg;
+			reg++;
+		}
+		else if(o[0] == '>'){
+			int num_a1 = st_i(r1);
+			int num_a2 = st_i(r2);
+			printf("sgt $t%d , $t%d , $t%d\n" , reg , tv[num_a1] , tv[num_a2] );
+			int tnum = st_i(r);
+			tv[tnum] = reg;
+			reg++;
+		}
+		
+		else if(o[0] == '&'){
+			printf("la $t%d , %s\n" , reg , r1 );
+			int tnum = st_i(r);
+			tv[tnum] = reg;
+			reg++;
+		}
+		else if(o[0] == 'a'){
+			int num_a1 = st_i(r1);
+			int num_a2 = st_i(r);
+			printf("sw $t%d , 0($t%d)\n" , tv[num_a1] , tv[num_a2] );
+		}
+		else if(o[0] == 'b'){
+			int num_a1 = st_i(r1);
+			printf("lw $t%d , 0($t%d)\n" , reg , tv[num_a1] );
+			int tnum = st_i(r);
+			tv[tnum] = reg;
+			reg++;
+		}
+		else if(o[0] == ':'){
+			printf("%s\n" , r);
+		}
+		else if(o[0] == 'j'){
+			printf("j %s\n" , r);
+		}
+		
+		
+		
+				
+	}
+	
+	/*for(int j = 0;j < 200;j++){
+	printf("%d\n" , tv[j] );
+	}*/
+}  
+    
+    
+void displ_mips(){
+	for(int i=0;i<instrn_num;i++){
+		printf("%s   %s   %s   %s\n",icg_instrn[i].arg1 ,icg_instrn[i].arg2 ,icg_instrn[i].op ,icg_instrn[i].res  );
+	}
+}
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
     
     

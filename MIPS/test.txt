@@ -1,8 +1,24 @@
+
+
 void main()
 {
-  integer array[100], var1 , var2 , n;
-  n = 12;
-  if( n > 12){
-     var1 = var2 + 1;
+  integer array[3], n, c, d, swap;
+  n = 3;
+  for (c = 0; c < n; c = c + 1){
+     array[c] = 6 - c;
   }
+
+  for (c = 0 ; c < n - 1; c = c + 1)
+  {
+    for (d = 0 ; d < n - c - 1; d = d + 1)
+    {
+      if (array[d] > array[d+1])
+      {
+        swap       = array[d];
+        array[d]   = array[d+1];
+        array[d+1] = swap;
+      }
+    }
+  }
+
 }
