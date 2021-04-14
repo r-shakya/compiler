@@ -1,7 +1,7 @@
 
 .data
 id0:
-	.space 12;
+	.space 28;
 id1:
 	.word 0;
 id2:
@@ -13,7 +13,7 @@ id4:
 .text
 .globl main
 main:
-li $t0, 3
+li $t0, 7
 sw $t0 , id1
 li $t1, 0
 sw $t1 , id2
@@ -63,9 +63,9 @@ l8:
 lw $t5, id3
 lw $t6, id1
 lw $t7, id2
-li $t8, 1
-sub $t9 , $t7 , $t8
-sub $t0 , $t6 , $t9
+sub $t8 , $t6 , $t7
+li $t9, 1
+sub $t0 , $t8 , $t9
 slt $t1 , $t5 , $t0
 beq $t1 , $zero , l11 
 j l10
@@ -121,3 +121,4 @@ j l9
 l11:
 j l5
 l7:
+jr $ra

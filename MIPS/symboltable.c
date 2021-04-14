@@ -766,6 +766,7 @@ void icg_to_mips(){
 	/*for(int j = 0;j < 200;j++){
 	printf("%d\n" , tv[j] );
 	}*/
+	printf("jr $ra");
 }  
     
     
