@@ -1615,37 +1615,37 @@ yyreduce:
 
   case 28:
 #line 64 "parser.y"
-                                        { temproot1 = change_scope( temproot1 ); lsn[loop_count] = lnum; loop_count++;   printf("if not t%d goto l%d\n",tnum-1,lnum); lnum = lnum + 2 ; }
+                                        { temproot1 = change_scope( temproot1 ); lsn[loop_count] = lnum; loop_count++;        sprintf(rs1, "l%d", lnum);  sprintf(ag1, "t%d", tnum-1);   addicg(ag1,"$zero","beq",rs1);            printf("if not t%d goto l%d\n",tnum-1,lnum); lnum = lnum + 2 ; }
 #line 1620 "y.tab.c"
     break;
 
   case 29:
 #line 64 "parser.y"
-                                                                                                                                                                                                             { temproot1 = temproot1->parent_scope; }
+                                                                                                                                                                                                                                                                                                                       { temproot1 = temproot1->parent_scope; }
 #line 1626 "y.tab.c"
     break;
 
   case 30:
 #line 64 "parser.y"
-                                                                                                                                                                                                                                                                                          {  printf(" \n");   loop_count--; /*lnum++;*/ }
+                                                                                                                                                                                                                                                                                                                                                                                                    {   loop_count--; /*lnum++;*/ }
 #line 1632 "y.tab.c"
     break;
 
   case 31:
 #line 66 "parser.y"
-                 { lsn[loop_count] = lnum; loop_count++;    printf("l%d:\n",lnum); lnum++; }
+                 { lsn[loop_count] = lnum; loop_count++;   sprintf(rs1,"l%d:",lnum );   addicg("","",":",rs1);     printf("l%d:\n",lnum); lnum++; }
 #line 1638 "y.tab.c"
     break;
 
   case 32:
 #line 66 "parser.y"
-                                                                                                                       { printf("if not t%d goto l%d\n",tnum-1,lnum); temproot1 = change_scope( temproot1 ); lnum++; }
+                                                                                                                                                                              {     sprintf(rs1, "l%d", lnum);  sprintf(ag1, "t%d", tnum-1);   addicg(ag1,"$zero","beq",rs1);         printf("if not t%d goto l%d\n",tnum-1,lnum); temproot1 = change_scope( temproot1 ); lnum++; }
 #line 1644 "y.tab.c"
     break;
 
   case 33:
 #line 66 "parser.y"
-                                                                                                                                                                                                                                                                       {  temproot1 = temproot1->parent_scope; printf("goto l%d\n",lsn[loop_count-1]  );  printf("l%d:\n", lsn[loop_count - 1] + 1 ); loop_count--;  }
+                                                                                                                                                                                                                                                                                                                                                                                                                                    {  temproot1 = temproot1->parent_scope;        sprintf(rs1,"l%d",lsn[ loop_count - 1] );   addicg("","","j",rs1);      printf("goto l%d\n",lsn[loop_count-1]  );     sprintf(rs1,"l%d:",lsn[loop_count - 1] + 1  );   addicg("","",":",rs1);          printf("l%d:\n", lsn[loop_count - 1] + 1 ); loop_count--;  }
 #line 1650 "y.tab.c"
     break;
 
@@ -1657,43 +1657,43 @@ yyreduce:
 
   case 35:
 #line 67 "parser.y"
-                                                                                    { lsn[loop_count] = lnum; loop_count++; lnum_temp = lnum; printf("l%d:\n",lnum);  }
+                                                                                    { lsn[loop_count] = lnum; loop_count++; lnum_temp = lnum;     sprintf(rs1,"l%d:",lnum );   addicg("","",":",rs1);      printf("l%d:\n",lnum);  }
 #line 1662 "y.tab.c"
     break;
 
   case 36:
 #line 67 "parser.y"
-                                                                                                                                                                                        { printf("if not t%d goto l%d\n",tnum-1,lnum+3 ); printf("goto l%d\n",lnum+2); printf("l%d:\n",lnum + 1);  }
+                                                                                                                                                                                                                                                     {        sprintf(rs1, "l%d", lnum + 3);  sprintf(ag1, "t%d", tnum-1);   addicg(ag1,"$zero","beq",rs1);          printf("if not t%d goto l%d\n",tnum-1,lnum+3 ); printf("goto l%d\n",lnum+2);       sprintf(rs1,"l%d:",lnum + 1 );   addicg("","",":",rs1);                printf("l%d:\n",lnum + 1);  }
 #line 1668 "y.tab.c"
     break;
 
   case 37:
 #line 67 "parser.y"
-                                                                                                                                                                                                                                                                                                                { printf("goto l%d\n",lnum); printf("l%d:\n",lnum+2); lnum = lnum + 4; }
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        {       sprintf(rs1,"l%d",lnum);   addicg("","","j",rs1);           printf("goto l%d\n",lnum);      sprintf(rs1,"l%d:",lnum + 2 );   addicg("","",":",rs1);       printf("l%d:\n",lnum+2); lnum = lnum + 4; }
 #line 1674 "y.tab.c"
     break;
 
   case 38:
 #line 67 "parser.y"
-                                                                                                                                                                                                                                                                                                                                                                                                                { lnum_temp = lsn[loop_count - 1]; printf("goto l%d\n",lnum_temp + 1);  temproot1 = temproot1->parent_scope;  printf("l%d:\n",lnum_temp + 3); loop_count--; }
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             { lnum_temp = lsn[loop_count - 1];       sprintf(rs1,"l%d",lnum_temp + 1);   addicg("","","j",rs1);            printf("goto l%d\n",lnum_temp + 1);  temproot1 = temproot1->parent_scope;     sprintf(rs1,"l%d:",lnum_temp + 3);   addicg("","",":",rs1);       printf("l%d:\n",lnum_temp + 3); loop_count--; }
 #line 1680 "y.tab.c"
     break;
 
   case 40:
 #line 71 "parser.y"
-           {temproot1 = change_scope( temproot1 );  printf("goto l%d\n",lsn[ loop_count - 1] + 1); printf("l%d:\n",lsn[ loop_count - 1] );  lnum++; }
+           {temproot1 = change_scope( temproot1 ); sprintf(rs1,"l%d",lsn[ loop_count - 1] + 1);   addicg("","","j",rs1);    printf("goto l%d\n",lsn[ loop_count - 1] + 1);   sprintf(rs1,"l%d:",lsn[ loop_count - 1]);   addicg("","",":",rs1);           printf("l%d:\n",lsn[ loop_count - 1] );  lnum++; }
 #line 1686 "y.tab.c"
     break;
 
   case 41:
 #line 71 "parser.y"
-                                                                                                                                                                                { temproot1 = temproot1->parent_scope;    printf("l%d:\n", lsn[loop_count - 1] + 1 );   }
+                                                                                                                                                                                                                                                                                                                                       { temproot1 = temproot1->parent_scope;       sprintf(rs1,"l%d:",lsn[ loop_count - 1] + 1);   addicg("","",":",rs1);           printf("l%d:\n", lsn[loop_count - 1] + 1 );   }
 #line 1692 "y.tab.c"
     break;
 
   case 42:
 #line 72 "parser.y"
-        { printf("l%d:\n", lsn[loop_count - 1] );  }
+        {  sprintf(rs1,"l%d:",lsn[ loop_count - 1]);   addicg("","",":",rs1);       printf("l%d:\n", lsn[loop_count - 1] );  }
 #line 1698 "y.tab.c"
     break;
 
