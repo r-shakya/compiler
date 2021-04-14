@@ -5,7 +5,8 @@ void main()
   array[var1] = var2;
   char a , b;
   float yy , zz;
-  array[var1] = array[var2 * 2];
+  array[var1] = 2 +5;
+  array[2+ var1] = var2;
   yy = zz;
   a = b;
   n = n ;
