@@ -1,0 +1,8 @@
+void main(){
+	integer var1,i,var2,var3;
+	integer ar[5];
+	var1 = -6/2+3*-1-5;
+	output("hello world");
+	output(var2);
+	input(var1);
+}

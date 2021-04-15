@@ -14,11 +14,11 @@ int yydebug=1;
 	 char string[15];
 }
 
-%token NUM ID START END INTEGER CHAR FLOAT IF ELSE WHILE FOR VOID CALL SEND typestr MAIN
+%token NUM ID START END INTEGER CHAR FLOAT IF ELSE WHILE FOR VOID CALL SEND typestr MAIN CSTRING OUTPUT INPUT
 
 %type <number> NUM
-%type <string> ID
-%type <string> VOID expr
+%type <string> ID CSTRING
+%type <string> VOID expr expr1 expr2 expr3 expr4
 %type <number>  assignexpr logicalexpr
 %type <string> decl funcdecl arraylist typestr IFEL
 
@@ -60,6 +60,8 @@ funcdecl: typestr ID               {strcpy($$,$1);  if( lookup( temproot1 , $2  
 statements: assignexpr ';'                                                                {}
     | statements assignexpr ';'                                                           {}
     | statements decl ';'                                                                 {}
+    | statements outputstmt ';'                                                           {}
+    | statements inputstmt ';'                                                            {}
     | statements returnstmt ';'                                                           {}
     | statements IF '(' logicalexpr ')' { temproot1 = change_scope( temproot1 ); lsn[loop_count] = lnum; loop_count++;        sprintf(rs1, "l%d", lnum);  sprintf(ag1, "t%d", tnum-1);   addicg(ag1,"$zero","beq",rs1);            printf("if not t%d goto l%d\n",tnum-1,lnum); lnum = lnum + 2 ; } '{' statements '}' { temproot1 = temproot1->parent_scope; } IFEL                                {   loop_count--; /*lnum++;*/ }
    // | statements IF '(' logicalexpr ')' '{' statements '}' ELSE '{' statements '}'        { printf("if-else statement executed \n\n"); }
@@ -74,6 +76,13 @@ IFEL: ELSE {temproot1 = change_scope( temproot1 ); sprintf(rs1,"l%d",lsn[ loop_c
 
 
 returnstmt: SEND ID                                                       {  if( !lookup_for_id( temproot1 , $2 ) ){ printf("%s is not defined" , $2);  exit(0); } if( strcmp( func_node->ID_Value , leftassign ) != 0 ){ printf( "parameter %s in the function does not match with return type\n",$2 ); exit(0);  } printf("return from function %s\n",$2); }
+          ;
+
+outputstmt: OUTPUT '(' CSTRING ')'                                           { printf("output---->%s\n\n",$3); }
+          | OUTPUT '(' ID ')'                                                { printf("output---->%s\n\n",$3); }
+          ;
+          
+inputstmt: INPUT '(' ID ')'                                                 { printf("input---->%s\n\n",$3); }
           ;
 
 assignexpr: ID '=' { if( !lookup_for_id( temproot1 , $1 ) ){ printf("%s is not defined" , $1);  exit(0); } if( leftassignvar[0] != '\0' ){ printf("%s  use of data type is incorrect and is%s\n",$1,leftassignvar); exit(0); }  prev_num = current_num; } expr                 {   sprintf(rs1, "id%d", prev_num);    sprintf(ag1, "t%d", tnum-1); addicg(ag1,"","",rs1);   printf("id%d = t%d \n",prev_num,tnum - 1);  }

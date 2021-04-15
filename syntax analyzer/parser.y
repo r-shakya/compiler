@@ -14,12 +14,12 @@ int yydebug=1;
 	 char string[15];
 }
 
-%token NUM ID START END INTEGER CHAR FLOAT IF ELSE WHILE FOR VOID CALL SEND typestr MAIN
+%token NUM ID START END INTEGER CHAR FLOAT IF ELSE WHILE FOR VOID CALL SEND typestr MAIN OUTPUT INPUT CSTRING
 
 %type <number> NUM
-%type <string> ID
+%type <string> ID CSTRING
 %type <string> VOID
-%type <number> expr assignexpr logicalexpr
+%type <number> expr expr1 expr2 expr3 expr4 assignexpr logicalexpr
 %type <string> decl arraylist typestr IFEL
 
 %right '='
@@ -54,6 +54,8 @@ statements: assignexpr ';'                                                      
     | statements assignexpr ';'                                                           {}
     | statements decl ';'                                                                 {}
     | statements returnstmt ';'                                                           {}
+    | statements outputstmt ';'                                                           {}
+    | statements inputstmt ';'                                                            {}
     | statements IF '(' logicalexpr ')' {  } '{' statements '}' {  } IFEL                                {  printf("only if statement executed \n\n"); }
    // | statements IF '(' logicalexpr ')' '{' statements '}' ELSE '{' statements '}'        { printf("if-else statement executed \n\n"); }
     | statements WHILE '(' logicalexpr ')' {  }  '{' statements '}'                             {    printf("while statement executed \n\n"); }
@@ -67,6 +69,13 @@ IFEL: ELSE {} '{' statements '}'        {  printf("else statement executed \n\n"
 
 
 returnstmt: SEND expr                                                       { printf("return from function %d\n\n",$2); }
+          ;
+
+outputstmt: OUTPUT '(' CSTRING ')'                                           { printf("output---->%s\n\n",$3); }
+          | OUTPUT '(' ID ')'                                                { printf("output---->%s\n\n",$3); }
+          ;
+          
+inputstmt: INPUT '(' ID ')'                                                 { printf("input---->%s\n\n",$3); }
           ;
 
 assignexpr: ID '=' expr                                                     { printf("%s = %d\n\n",$1,$3);  }
@@ -83,13 +92,26 @@ paramlist: NUM                { printf("number %d added as parameter\n\n",$1); }
          | paramlist ',' NUM  { printf("number %d added as parameter\n\n",$3); }
          ;
 
-expr: NUM                     { $$ = $1; }
-    | ID                      { $$ = 0;  printf("id in arithmetic expr = %s\n\n",$1); }
-    | expr '+' expr           { $$ = $1 + $3; printf("%d + %d\n\n",$1,$3); }
-    | expr '-' expr           { $$ = $1 - $3; printf("%d - %d\n\n",$1,$3); }
-    | expr '*' expr           { $$ = $1 * $3; printf("%d * %d\n\n",$1,$3); }
-    | expr '/' expr           { $$ = $1 / $3; printf("%d / %d\n\n",$1,$3); }
-    | '(' expr ')'            { $$ =  $2; printf("( %d )\n\n",$2); }
+expr: expr '+' expr1           { $$ = $1 + $3; printf("%d + %d\n\n",$1,$3); }
+    | expr1                    { $$ = $1; }
+    ;
+
+expr1: expr1 '-' expr2         { $$ = $1 - $3; printf("%d - %d\n\n",$1,$3); }
+    | expr2                    { $$ = $1; }
+    ;
+    
+expr2: expr2 '*' expr3         { $$ = $1 * $3; printf("%d * %d\n\n",$1,$3); }
+    | expr3                    { $$ = $1; }
+    ;
+    
+expr3: expr3 '/' expr4         { $$ = $1 / $3; printf("%d / %d\n\n",$1,$3); }
+    | expr4                    { $$ = $1; }
+    ;
+
+expr4: NUM                     { $$ = $1; }
+    | ID                       { $$ = 0;  printf("id in arithmetic expr = %s\n\n",$1); }
+    | '(' expr ')'             { $$ =  $2; printf("( %d )\n\n",$2); }
+    | '-' expr4                { $$ =  -$2; printf("( %d )\n\n",$2); }
     ;
 
 logicalexpr: NUM                      { $$ = $1; }

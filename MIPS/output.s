@@ -25,6 +25,10 @@ t14 = t12 - t13
 *t11 = t14
 goto l1
 l3:
+output---->"hello world"
+
+input---->n
+
 t16 = 0
 id2 = t16 
 l4:

@@ -7,6 +7,9 @@ void main()
   for (c = 0; c < n; c = c + 1){
      array[c] = 6 - c;
   }
+  
+  output("hello world");
+  input(n);
 
   for (c = 0 ; c < n - 1; c = c + 1)
   {

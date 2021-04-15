@@ -20,9 +20,13 @@ digit [0-9]
 "for"                  { return FOR; }
 "call"                 { return CALL; }
 "send"                 { return SEND; }
+"output"               { return OUTPUT; }
+"input"                { return INPUT; }
 
 {letter_}({letter_}|{digit})*    	        {strcpy(yylval.string, yytext); return ID; }
 {digit}+ 		                        {yylval.number= atoi(yytext); return NUM;}
+
+["](.)*["]    	        {strcpy(yylval.string, yytext); return CSTRING; }
 
 "+"      		{ return '+'; }
 "-"      		{ return '-'; }
