@@ -615,6 +615,7 @@ int st_i(char str1[]){
         
         
 void add_data(){
+	int j = 0;
 	for(int i=0;i<id_num;i++){
 		int num = idntfrs[i];
 		if( num == 0){
@@ -624,6 +625,11 @@ void add_data(){
 		else if( num == 3){
 			printf("id%d:\n\t",i);
 			printf(".space %d;\n" , 4*id_size[i]);
+		}
+		else if( num == 4){
+			printf("id%d:\n\t",i);
+			printf(".asciiz %s\n" , strdata[j]);
+			j++;
 		}
 	}
 	
@@ -757,7 +763,32 @@ void icg_to_mips(){
 		else if(o[0] == 'j'){
 			printf("j %s\n" , r);
 		}
-		
+		else if(o[0] == 'o'){
+			if(r[0] == 's'){
+				printf("li $v0 , 4\n");
+				printf("la $a0 , %s\n",r1);
+				printf("syscall\n");
+			}
+			else if(r[0] == 'i'){
+				printf("li $v0 , 1\n");
+				int num_a1 = st_i(r1);
+				printf("move $a0 , $t%d\n",tv[num_a1]  );
+				printf("syscall\n");
+			}
+		}
+		else if(o[0] == 'i'){
+			if(r[0] == 'i'){
+				printf("li $v0 , 5\n");
+				printf("syscall\n");
+				printf("sw $v0 , %s\n",r1  );
+			}
+			else if(r[0] == 'a'){
+				printf("li $v0 , 5\n");
+				printf("syscall\n");
+				int num_a1 = st_i(r1);
+				printf("sw $v0 , 0($t%d)\n",tv[num_a1] );
+			}
+		}
 		
 		
 				

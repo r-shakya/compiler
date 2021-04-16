@@ -2,18 +2,20 @@
 
 void main()
 {
-  integer array[7], n, c, d, swap;
-  n = 7;
+  integer array[8], n, c, d, swap;
+  d = 14;
+  n = -d + 20 + 2;
   for (c = 0; c < n; c = c + 1){
-     array[c] = 6 - c;
+     input( array[c] );
   }
   
-  output("hello world");
-  input(n);
+  output("hello world\n");
+  integer count;
+  count = 4;
 
   for (c = 0 ; c < n - 1; c = c + 1)
   {
-    for (d = 0 ; d < (n - c) - 1; d = d + 1)
+    for (d = 0 ; d < n - c - 1; d = d + 1)
     {
       if (array[d] > array[d+1])
       {
@@ -23,5 +25,7 @@ void main()
       }
     }
   }
-
+  if( array[1] ){
+  	output( count );
+  }
 }
