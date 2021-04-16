@@ -25,7 +25,16 @@ void main()
       }
     }
   }
-  if( array[1] ){
+  if( 9 > 5 > -2 ){
   	output( count );
+  }
+  if( 9 >= 9 ){
+  	output( count  + 1);
+  }
+  if( 9 <= 9 ){
+  	output( count  + 2);
+  }
+  if( 9 == 9 ){
+  	output( count + 3 );
   }
 }

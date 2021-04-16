@@ -14,7 +14,7 @@ int yydebug=1;
 	 char string[15];
 }
 
-%token NUM ID START END INTEGER CHAR FLOAT IF ELSE WHILE FOR VOID CALL SEND typestr MAIN CSTRING OUTPUT INPUT
+%token NUM ID START END INTEGER CHAR FLOAT IF ELSE WHILE FOR VOID CALL SEND typestr MAIN CSTRING OUTPUT INPUT LE GE EE
 
 %type <number> NUM
 %type <string> ID CSTRING
@@ -146,6 +146,9 @@ logicalexpr: /*NUM                      { printf("t%d = %d\n",tnum,$1); $$=tnum;
     | ID '[' expr ']'                  { if( !lookup_for_id( temproot1 , $1 ) ){ printf("%s is not defined" , $1);  exit(0); }  sprintf(rs1, "t%d", tnum);    sprintf(ag2, "t%d", tnum-1); addicg("4",ag2,"*",rs1);      printf("t%d = 4 * t%d\n",tnum,tnum-1); tnum++;     sprintf(rs1, "t%d", tnum);    sprintf(ag1, "id%d", current_num); addicg(ag1,"","&",rs1);      printf("t%d = &id%d\n",tnum, current_num); tnum++;        sprintf(rs1, "t%d", tnum);  sprintf(ag1, "t%d", tnum-1);   sprintf(ag2, "t%d", tnum-2); addicg(ag1,ag2,"+",rs1);         printf("t%d = t%d + t%d\n",tnum,tnum-1,tnum-2); tnum++;      sprintf(rs1, "t%d", tnum);    sprintf(ag1, "t%d", tnum-1); addicg(ag1,"","b",rs1);        printf("t%d = *t%d\n", tnum,tnum-1); $$=tnum; tnum++;  }
     | logicalexpr '<' logicalexpr     {        sprintf(rs1, "t%d", tnum);  sprintf(ag1, "t%d", $1);   sprintf(ag2, "t%d", $3 ); addicg(ag1,ag2,"<",rs1);                                      printf("t%d = t%d < t%d\n",tnum,$1,$3); tnum++; /*printf("t%d = t%d < t%d\n",tnum,tnum-2,tnum-1); tnum++;*/ }
     | logicalexpr '>' logicalexpr     {        sprintf(rs1, "t%d", tnum);  sprintf(ag1, "t%d", $1);   sprintf(ag2, "t%d", $3 ); addicg(ag1,ag2,">",rs1);                                       printf("t%d = t%d > t%d\n",tnum,$1,$3); tnum++; /*printf("t%d = t%d > t%d\n",tnum,tnum-2,tnum-1); tnum++;*/ }
+    | logicalexpr GE logicalexpr     {        sprintf(rs1, "t%d", tnum);  sprintf(ag1, "t%d", $1);   sprintf(ag2, "t%d", $3 ); addicg(ag1,ag2,">=",rs1);                                       printf("t%d = t%d >= t%d\n",tnum,$1,$3); tnum++; /*printf("t%d = t%d > t%d\n",tnum,tnum-2,tnum-1); tnum++;*/ }
+    | logicalexpr LE logicalexpr     {        sprintf(rs1, "t%d", tnum);  sprintf(ag1, "t%d", $1);   sprintf(ag2, "t%d", $3 ); addicg(ag1,ag2,"<=",rs1);                                       printf("t%d = t%d <= t%d\n",tnum,$1,$3); tnum++; /*printf("t%d = t%d > t%d\n",tnum,tnum-2,tnum-1); tnum++;*/ }
+    | logicalexpr EE logicalexpr     {        sprintf(rs1, "t%d", tnum);  sprintf(ag1, "t%d", $1);   sprintf(ag2, "t%d", $3 ); addicg(ag1,ag2,"==",rs1);                                       printf("t%d = t%d == t%d\n",tnum,$1,$3); tnum++; /*printf("t%d = t%d > t%d\n",tnum,tnum-2,tnum-1); tnum++;*/ }
     | '(' logicalexpr ')'             {  }
     ;
 

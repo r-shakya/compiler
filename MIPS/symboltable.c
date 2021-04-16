@@ -721,7 +721,30 @@ void icg_to_mips(){
 			tv[tnum] = reg;
 			reg++;
 		}
-		
+		else if(strcmp(o,"<=") == 0 ){
+			int num_a1 = st_i(r1);
+			int num_a2 = st_i(r2);
+			printf("sle $t%d , $t%d , $t%d\n" , reg , tv[num_a1] , tv[num_a2] );
+			int tnum = st_i(r);
+			tv[tnum] = reg;
+			reg++;
+		}
+		else if(strcmp(o,">=") == 0 ){
+			int num_a1 = st_i(r1);
+			int num_a2 = st_i(r2);
+			printf("sge $t%d , $t%d , $t%d\n" , reg , tv[num_a1] , tv[num_a2] );
+			int tnum = st_i(r);
+			tv[tnum] = reg;
+			reg++;
+		}
+		else if(strcmp(o,"==") == 0 ){
+			int num_a1 = st_i(r1);
+			int num_a2 = st_i(r2);
+			printf("seq $t%d , $t%d , $t%d\n" , reg , tv[num_a1] , tv[num_a2] );
+			int tnum = st_i(r);
+			tv[tnum] = reg;
+			reg++;
+		}
 		else if(o[0] == '<'){
 			int num_a1 = st_i(r1);
 			int num_a2 = st_i(r2);

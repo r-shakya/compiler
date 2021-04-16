@@ -116,16 +116,46 @@ goto l9
 l11:
 goto l5
 l7:
-t78 = 1
-t79 = 4 * t78
-t80 = &id0
-t81 = t80 + t79
-t82 = *t81
+t78 = 9
+t79 = 5
+t80 = -2
+t81 = t79 > t80
+t82 = t78 > t79
 if not t82 goto l14
 t83 = id6
 output   count
 
 l14:
+t84 = 9
+t85 = 9
+t86 = t84 >= t85
+if not t86 goto l16
+t87 = id6
+t88 = 1
+t89 = t87 + t88
+output   count
+
+l16:
+t90 = 9
+t91 = 9
+t92 = t90 <= t91
+if not t92 goto l18
+t93 = id6
+t94 = 2
+t95 = t93 + t94
+output   count
+
+l18:
+t96 = 9
+t97 = 9
+t98 = t96 == t97
+if not t98 goto l20
+t99 = id6
+t100 = 3
+t101 = t99 + t100
+output   count
+
+l20:
 
 
 
@@ -268,15 +298,48 @@ j l9
 l11:
 j l5
 l7:
-li $t6, 1
-sll $t7 , $t6 , 2
-la $t8 , id0
-add $t9 , $t8 , $t7
-lw $t0 , 0($t9)
+li $t6, 9
+li $t7, 5
+li $t8, -2
+sgt $t9 , $t7 , $t8
+sgt $t0 , $t6 , $t7
 beq $t0 , $zero , l14 
 lw $t1, id6
 li $v0 , 1
 move $a0 , $t1
 syscall
 l14:
+li $t2, 9
+li $t3, 9
+sge $t4 , $t2 , $t3
+beq $t4 , $zero , l16 
+lw $t5, id6
+li $t6, 1
+add $t7 , $t5 , $t6
+li $v0 , 1
+move $a0 , $t7
+syscall
+l16:
+li $t8, 9
+li $t9, 9
+sle $t0 , $t8 , $t9
+beq $t0 , $zero , l18 
+lw $t1, id6
+li $t2, 2
+add $t3 , $t1 , $t2
+li $v0 , 1
+move $a0 , $t3
+syscall
+l18:
+li $t4, 9
+li $t5, 9
+seq $t6 , $t4 , $t5
+beq $t6 , $zero , l20 
+lw $t7, id6
+li $t8, 3
+add $t9 , $t7 , $t8
+li $v0 , 1
+move $a0 , $t9
+syscall
+l20:
 jr $ra

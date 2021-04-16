@@ -22,6 +22,9 @@ digit [0-9]
 "send"                 { return SEND; }
 "output"               { return OUTPUT; }
 "input"                { return INPUT; }
+">="			{ return GE; }
+"<="			{ return LE; }
+"=="			{ return EE; }
 
 {letter_}({letter_}|{digit})*    	        {strcpy(yylval.string, yytext); return ID; }
 {digit}+ 		                        {yylval.number= atoi(yytext); return NUM;}

@@ -137,15 +137,48 @@ j l9
 l11:
 j l5
 l7:
-li $t6, 1
-sll $t7 , $t6 , 2
-la $t8 , id0
-add $t9 , $t8 , $t7
-lw $t0 , 0($t9)
+li $t6, 9
+li $t7, 5
+li $t8, -2
+sgt $t9 , $t7 , $t8
+sgt $t0 , $t6 , $t7
 beq $t0 , $zero , l14 
 lw $t1, id6
 li $v0 , 1
 move $a0 , $t1
 syscall
 l14:
+li $t2, 9
+li $t3, 9
+sge $t4 , $t2 , $t3
+beq $t4 , $zero , l16 
+lw $t5, id6
+li $t6, 1
+add $t7 , $t5 , $t6
+li $v0 , 1
+move $a0 , $t7
+syscall
+l16:
+li $t8, 9
+li $t9, 9
+sle $t0 , $t8 , $t9
+beq $t0 , $zero , l18 
+lw $t1, id6
+li $t2, 2
+add $t3 , $t1 , $t2
+li $v0 , 1
+move $a0 , $t3
+syscall
+l18:
+li $t4, 9
+li $t5, 9
+seq $t6 , $t4 , $t5
+beq $t6 , $zero , l20 
+lw $t7, id6
+li $t8, 3
+add $t9 , $t7 , $t8
+li $v0 , 1
+move $a0 , $t9
+syscall
+l20:
 jr $ra
