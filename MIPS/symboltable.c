@@ -180,6 +180,9 @@ struct data_node* symbol_copy(char *idname , char *idvalue , char *idtype){
     	
     	id_num++;
     }
+    else{
+    	symbol->ID_num = f_num;
+    }
      
     symbol->next = NULL;
     return symbol;
@@ -426,6 +429,7 @@ bool lookup_func( struct Scope_node* root , char *name ){
 						}
 					}
 					current_num = temp->ID_num;
+					func_no = temp->ID_num;
 					return true;
 				}
         		}
@@ -700,6 +704,18 @@ void icg_to_mips(){
 			printf("addi $sp , $sp , 44\n");
 			
 		}
+		else if( strcmp(o,"store") == 0  ){
+			//printf("\n this is %s \n",r);
+			printf("sw $s0 , %s\n",r1);
+		}
+		else if( strcmp(o,"param") == 0  ){
+			printf("lw %s , %s\n",r , r1);
+		}
+		else if( strcmp(o,"loadparam") == 0  ){
+			int function_number;
+    			sscanf( r1 ,"%d", &function_number );
+    			reg_to_func_param(function_number);
+		}
 		else if(o[0] == '+'){
 			int num_a1 = st_i(r1);
 			int num_a2 = st_i(r2);
@@ -894,14 +910,22 @@ void icg_to_mips_for_func(int strt , int j , int fno){
 			store_registers(fno);
 			printf( "jal %s \n",r1 );
 			recover_registers(fno);
-			
 		}
 		else if( strcmp(o,"return") == 0  ){
 			printf("lw $s0 , %s\n",r);
 			printf("jr $ra\n");
 		}
 		else if( strcmp(o,"store") == 0  ){
-			printf("sw $s0 , %s\n",r);
+			//printf("\n this is %s \n",r);
+			printf("sw $s0 , %s\n",r1);
+		}
+		else if( strcmp(o,"param") == 0  ){
+			printf("lw %s , %s\n",r , r1);
+		}
+		else if( strcmp(o,"loadparam") == 0  ){
+			int function_number;
+    			sscanf( r1 ,"%d", &function_number );
+    			reg_to_func_param(function_number);
 		}
 		else if(o[0] == '+'){
 			int num_a1 = st_i(r1);
@@ -920,14 +944,12 @@ void icg_to_mips_for_func(int strt , int j , int fno){
 			reg++;
 		}
 		else if(o[0] == '*'){
-		
 			if(r1[0] == '4'){
 				int num_a2 = st_i(r2);
 				printf("sll $t%d , $t%d , 2\n" , reg ,  tv[num_a2] );
 				int tnum = st_i(r);
 				tv[tnum] = reg;
 				reg++;
-			
 			}
 			else{
 				int num_a1 = st_i(r1);
@@ -1063,18 +1085,14 @@ void store_registers(int fnumber){
 		int siz_ = j - i;
 		printf("addi $sp , $sp , %d\n",-4*siz_);
 		while(i < j){
-			printf("sw id%d , %d($sp)\n",i,4*(i - si));
+			printf("lw $s2 , id%d\n",i);
+			printf("sw $s2 , %d($sp)\n",4*(i - si));
 			i++;		
 		}
 	}
 }   
     
 void recover_registers(int fnumber){
-	printf("lw $ra , %d($sp)\n",0);
-	for(int i=0;i<10;i++){
-		printf("lw $t%d , %d($sp)\n",i,4*i + 4);
-	}
-	printf("addi $sp , $sp , 44\n");
 	int i = ficgdata[fnumber].s;
 	int j = ficgdata[fnumber].e;
 	int si = i;
@@ -1082,14 +1100,46 @@ void recover_registers(int fnumber){
 		int siz_ = j - i;
 		
 		while(i < j){
-			printf("lw id%d , %d($sp)\n",i,4*(i - si));
+			printf("lw $s2 , %d($sp)\n",4*(i - si));
+			printf("sw $s2 , id%d\n",i);
 			i++;		
 		}
 		printf("addi $sp , $sp , %d\n",4*siz_);
-		
+	}
+	printf("lw $ra , %d($sp)\n",0);
+	for(int i=0;i<10;i++){
+		printf("lw $t%d , %d($sp)\n",i,4*i + 4);
+	}
+	printf("addi $sp , $sp , 44\n");
+	
+} 
+
+
+void reg_to_func_param(int fnumber){
+	int i = ficgdata[fnumber].s;
+	int j = ficgdata[fnumber].param_end;
+	int si = i;
+	//printf("\\ni == %d   j == %d\n\n" , i , j);
+	if(i < j){
+		while(i < j){
+			printf("sw $s%d , id%d\n",(i-si) + 3,i);
+			i++;		
+		}
 	}
 }   
     
+void func_call_to_reg(int fnumber , int i ){
+	//int i = ficgdata[fnumber].s;
+	//int j = ficgdata[fnumber].param_end;
+	//int si = i;
+	//if(i < j){
+	//	while(i < j){
+			printf("lw $s%d , id%d\n",param_i + 3,i);
+			param_i++;
+	//		i++;		
+	//	}
+	//}
+}  
     
     
     

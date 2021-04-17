@@ -12,5 +12,5 @@ void main(){
 	integer a[3]={1,2,3};
 	integer var1,var2;
 
-	abc=call("sumofnumber",1);
+	abc=call("sumofnumber",var1);
 }

@@ -7,8 +7,9 @@ integer factorial(integer  n){
 	}
 	integer factn;
 	n = n - 1;
+	factn = call(factorial,n);
 	factn = (n + 1)*factn;
-	send factn; 
+	send factn;
 }
 
 void main()
@@ -16,10 +17,11 @@ void main()
   integer n;
   output("Enter Val :");
   input( n );
+  integer factn;
+  factn = call(factorial,n);
   output("Val of Fact(");
   output(n);
   output(") : ");
-  integer factn;
-  factn = call("factorial",n);
   output(factn);
+  output("\n");
 }

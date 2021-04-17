@@ -55,9 +55,16 @@ struct fcode ficg[50];
 
 struct fdata {
 	int s;
+	int param_end;
 	int e;
 };
 
 struct fdata ficgdata[50];
 
 int f_num = 0;
+
+int prev_curr_num = 0;
+
+int func_no = 0;
+
+int param_i = 0;
