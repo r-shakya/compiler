@@ -643,7 +643,16 @@ void icg_to_mips(){
 	printf("\n\n\n\n.data\n");
 	add_data();
 	printf(".text\n.globl main\nmain:\n");
+	int funci = 0;
 	for(int i=0;i<instrn_num;i++){
+		if(funci < f_num){
+			if(i == ficg[funci].start){
+				while(ficg[funci].end >= i){
+					i++;
+				}
+				funci++;
+			}
+		}
 		char r1[15] ;
 		char r2[15] ;
 		char o[15] ;
@@ -655,7 +664,6 @@ void icg_to_mips(){
 		if( reg == 10 ){
 				reg = 0;
 		}
-		
 		
 		if(strcmp(o,"") == 0 ){
 			if( r[0] == 't' ){
@@ -677,6 +685,20 @@ void icg_to_mips(){
 		else if( strcmp(o,"beq") == 0  ){
 			int num_a1 = st_i(r1);
 			printf( "beq $t%d , $zero , %s \n",tv[num_a1] , r );
+		}
+		else if( strcmp(o,"jal") == 0  ){
+			printf("addi $sp , $sp , -44\n");
+			printf("sw $ra , %d($sp)\n",0);
+			for(int i=0;i<10;i++){
+				printf("sw $t%d , %d($sp)\n",i,4*i + 4);
+			}
+			printf( "jal %s \n",r1 );
+			printf("lw $ra , %d($sp)\n",0);
+			for(int i=0;i<10;i++){
+				printf("lw $t%d , %d($sp)\n",i,4*i + 4);
+			}
+			printf("addi $sp , $sp , 44\n");
+			
 		}
 		else if(o[0] == '+'){
 			int num_a1 = st_i(r1);
@@ -820,7 +842,7 @@ void icg_to_mips(){
 	/*for(int j = 0;j < 200;j++){
 	printf("%d\n" , tv[j] );
 	}*/
-	printf("jr $ra");
+	printf("jr $ra\n\n");
 }  
     
     
@@ -831,14 +853,242 @@ void displ_mips(){
 }
     
     
-
+void icg_to_mips_for_func(int strt , int j , int fno){
+	int reg = 0;
+	int tv[250];
+	for(int i=strt;i<=j;i++){
+		char r1[15] ;
+		char r2[15] ;
+		char o[15] ;
+		char r[15] ;
+		strcpy(r1 , icg_instrn[i].arg1 );
+		strcpy(r2 , icg_instrn[i].arg2 );
+		strcpy(o , icg_instrn[i].op );
+		strcpy(r , icg_instrn[i].res );
+		if( reg == 10 ){
+			reg = 0;
+		}
+		
+		if(strcmp(o,"") == 0 ){
+			if( r[0] == 't' ){
+				if(r1[0] == 'i'){
+					printf("lw $t%d, %s\n",reg,r1);
+				}
+				else{
+					printf("li $t%d, %s\n",reg,r1);
+				}
+				int tnum = st_i(r);
+				tv[tnum] = reg;
+				reg++;
+			}
+			else if( r[0] == 'i' ){
+				int tnum = st_i(r1);
+				printf("sw $t%d , %s\n" , tv[tnum] , r );
+			}
+		}
+		else if( strcmp(o,"beq") == 0  ){
+			int num_a1 = st_i(r1);
+			printf( "beq $t%d , $zero , %s \n",tv[num_a1] , r );
+		}
+		else if( strcmp(o,"jal") == 0  ){
+			store_registers(fno);
+			printf( "jal %s \n",r1 );
+			recover_registers(fno);
+			
+		}
+		else if( strcmp(o,"return") == 0  ){
+			printf("lw $s0 , %s\n",r);
+			printf("jr $ra\n");
+		}
+		else if( strcmp(o,"store") == 0  ){
+			printf("sw $s0 , %s\n",r);
+		}
+		else if(o[0] == '+'){
+			int num_a1 = st_i(r1);
+			int num_a2 = st_i(r2);
+			printf("add $t%d , $t%d , $t%d\n" , reg , tv[num_a1] , tv[num_a2] );
+			int tnum = st_i(r);
+			tv[tnum] = reg;
+			reg++;
+		}
+		else if(o[0] == '-'){
+			int num_a1 = st_i(r1);
+			int num_a2 = st_i(r2);
+			printf("sub $t%d , $t%d , $t%d\n" , reg , tv[num_a1] , tv[num_a2] );
+			int tnum = st_i(r);
+			tv[tnum] = reg;
+			reg++;
+		}
+		else if(o[0] == '*'){
+		
+			if(r1[0] == '4'){
+				int num_a2 = st_i(r2);
+				printf("sll $t%d , $t%d , 2\n" , reg ,  tv[num_a2] );
+				int tnum = st_i(r);
+				tv[tnum] = reg;
+				reg++;
+			
+			}
+			else{
+				int num_a1 = st_i(r1);
+				int num_a2 = st_i(r2);
+				printf("mul $t%d , $t%d , $t%d\n" , reg , tv[num_a1] , tv[num_a2] );
+				int tnum = st_i(r);
+				tv[tnum] = reg;
+				reg++;
+			}
+		}
+		else if(o[0] == '/'){
+			int num_a1 = st_i(r1);
+			int num_a2 = st_i(r2);
+			printf("div $t%d , $t%d , $t%d\n" , reg , tv[num_a1] , tv[num_a2] );
+			int tnum = st_i(r);
+			tv[tnum] = reg;
+			reg++;
+		}
+		else if(strcmp(o,"<=") == 0 ){
+			int num_a1 = st_i(r1);
+			int num_a2 = st_i(r2);
+			//printf("%s , %s\n" , r1,r2 );
+			printf("sle $t%d , $t%d , $t%d\n" , reg , tv[num_a1] , tv[num_a2] );
+			int tnum = st_i(r);
+			tv[tnum] = reg;
+			reg++;
+		}
+		else if(strcmp(o,">=") == 0 ){
+			int num_a1 = st_i(r1);
+			int num_a2 = st_i(r2);
+			printf("sge $t%d , $t%d , $t%d\n" , reg , tv[num_a1] , tv[num_a2] );
+			int tnum = st_i(r);
+			tv[tnum] = reg;
+			reg++;
+		}
+		else if(strcmp(o,"==") == 0 ){
+			int num_a1 = st_i(r1);
+			int num_a2 = st_i(r2);
+			printf("seq $t%d , $t%d , $t%d\n" , reg , tv[num_a1] , tv[num_a2] );
+			int tnum = st_i(r);
+			tv[tnum] = reg;
+			reg++;
+		}
+		else if(o[0] == '<'){
+			int num_a1 = st_i(r1);
+			int num_a2 = st_i(r2);
+			printf("slt $t%d , $t%d , $t%d\n" , reg , tv[num_a1] , tv[num_a2] );
+			int tnum = st_i(r);
+			tv[tnum] = reg;
+			reg++;
+		}
+		else if(o[0] == '>'){
+			int num_a1 = st_i(r1);
+			int num_a2 = st_i(r2);
+			printf("sgt $t%d , $t%d , $t%d\n" , reg , tv[num_a1] , tv[num_a2] );
+			int tnum = st_i(r);
+			tv[tnum] = reg;
+			reg++;
+		}
+		
+		else if(o[0] == '&'){
+			printf("la $t%d , %s\n" , reg , r1 );
+			int tnum = st_i(r);
+			tv[tnum] = reg;
+			reg++;
+		}
+		else if(o[0] == 'a'){
+			int num_a1 = st_i(r1);
+			int num_a2 = st_i(r);
+			printf("sw $t%d , 0($t%d)\n" , tv[num_a1] , tv[num_a2] );
+		}
+		else if(o[0] == 'b'){
+			int num_a1 = st_i(r1);
+			printf("lw $t%d , 0($t%d)\n" , reg , tv[num_a1] );
+			int tnum = st_i(r);
+			tv[tnum] = reg;
+			reg++;
+		}
+		else if(o[0] == ':'){
+			printf("%s\n" , r);
+		}
+		else if(o[0] == 'j'){
+			printf("j %s\n" , r);
+		}
+		else if(o[0] == 'o'){
+			if(r[0] == 's'){
+				printf("li $v0 , 4\n");
+				printf("la $a0 , %s\n",r1);
+				printf("syscall\n");
+			}
+			else if(r[0] == 'i'){
+				printf("li $v0 , 1\n");
+				int num_a1 = st_i(r1);
+				printf("move $a0 , $t%d\n",tv[num_a1]  );
+				printf("syscall\n");
+			}
+		}
+		else if(o[0] == 'i'){
+			if(r[0] == 'i'){
+				printf("li $v0 , 5\n");
+				printf("syscall\n");
+				printf("sw $v0 , %s\n",r1  );
+			}
+			else if(r[0] == 'a'){
+				printf("li $v0 , 5\n");
+				printf("syscall\n");
+				int num_a1 = st_i(r1);
+				printf("sw $v0 , 0($t%d)\n",tv[num_a1] );
+			}
+		}
+		else if( o[0] == 'f' ){
+			printf("%s\t\n",r);
+		}
+		
+		
+				
+	}
+	printf("jr $ra\n\n");
+}  
     
     
     
+void store_registers(int fnumber){
+	printf("addi $sp , $sp , -44\n");
+	printf("sw $ra , %d($sp)\n",0);
+	for(int i=0;i<10;i++){
+		printf("sw $t%d , %d($sp)\n",i,4*i + 4);
+	}
+	int i = ficgdata[fnumber].s;
+	int j = ficgdata[fnumber].e;
+	int si = i;
+	if(i < j){
+		int siz_ = j - i;
+		printf("addi $sp , $sp , %d\n",-4*siz_);
+		while(i < j){
+			printf("sw id%d , %d($sp)\n",i,4*(i - si));
+			i++;		
+		}
+	}
+}   
     
-    
-    
-    
+void recover_registers(int fnumber){
+	printf("lw $ra , %d($sp)\n",0);
+	for(int i=0;i<10;i++){
+		printf("lw $t%d , %d($sp)\n",i,4*i + 4);
+	}
+	printf("addi $sp , $sp , 44\n");
+	int i = ficgdata[fnumber].s;
+	int j = ficgdata[fnumber].e;
+	int si = i;
+	if(i < j){
+		int siz_ = j - i;
+		
+		while(i < j){
+			printf("lw id%d , %d($sp)\n",i,4*(i - si));
+			i++;		
+		}
+		printf("addi $sp , $sp , %d\n",4*siz_);
+		
+	}
+}   
     
     
     

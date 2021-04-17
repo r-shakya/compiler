@@ -42,5 +42,22 @@ char rs1[15];
 int Isneg = 0; // if expression starts with negation
 int Isbneg = 0; // if expression starts with - ( expression )
 
-char strdata[30][40] ; // for storing string which needs to be printed
+char strdata[30][100] ; // for storing string which needs to be printed
 int sdnum = 0;  //number of such of string
+
+
+struct fcode {
+	int start;
+	int end;
+};
+
+struct fcode ficg[50];
+
+struct fdata {
+	int s;
+	int e;
+};
+
+struct fdata ficgdata[50];
+
+int f_num = 0;

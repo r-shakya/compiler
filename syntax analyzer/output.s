@@ -1,34 +1,47 @@
-no global declarartions
+var type char = c
+
+var type integer = a
+
+var type integer = b
+
+array type integer elements 3 = arr1
+
+var type integer = a
+
+id in arithmetic expr = a
+
+id in arithmetic expr = b
+
+0 + 0
+
+c = 0
+
+id in arithmetic expr = c
+
+a[1] = 0
+
+id in arithmetic expr = c
+
+0 + 1
+
+return from function 1
+
+sumofnumber function executed with send-type integer 
+
+number 1 added in array
+
+number 2 added in array
+
+number 3 added in array
+
+array type integer  elements 3 = a
+
+a[3] = {.....}
 
 var type integer = var1
 
-var type integer = i
-
 var type integer = var2
 
-var type integer = var3
 
-array type integer  elements 5 = ar
 
-( 6 )
-
--6 / 2
-
-( 1 )
-
-3 * -1
-
--3 - 5
-
--3 + -8
-
-var1 = -11
-
-output---->"hello world"
-
-output---->var2
-
-input---->var1
-
-main function executed
-
+Syntax Error: in line no 15 >>>>> "sumofnumber" 

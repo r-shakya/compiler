@@ -1,40 +1,25 @@
 
+integer factorial(integer  n){
+	integer one;
+	one = 1;
+	if(n <= 0){
+		send one;
+	}
+	integer factn;
+	n = n - 1;
+	factn = (n + 1)*factn;
+	send factn; 
+}
 
 void main()
 {
-  integer array[8], n, c, d, swap;
-  d = 14;
-  n = -d + 20 + 2;
-  for (c = 0; c < n; c = c + 1){
-     input( array[c] );
-  }
-  
-  output("hello world\n");
-  integer count;
-  count = 4;
-
-  for (c = 0 ; c < n - 1; c = c + 1)
-  {
-    for (d = 0 ; d < n - c - 1; d = d + 1)
-    {
-      if (array[d] > array[d+1])
-      {
-        swap       = array[d];
-        array[d]   = array[d+1];
-        array[d+1] = swap;
-      }
-    }
-  }
-  if( 9 > 5 > -2 ){
-  	output( count );
-  }
-  if( 9 >= 9 ){
-  	output( count  + 1);
-  }
-  if( 9 <= 9 ){
-  	output( count  + 2);
-  }
-  if( 9 == 9 ){
-  	output( count + 3 );
-  }
+  integer n;
+  output("Enter Val :");
+  input( n );
+  output("Val of Fact(");
+  output(n);
+  output(") : ");
+  integer factn;
+  factn = call("factorial",n);
+  output(factn);
 }

@@ -1,18 +1,40 @@
+
+
 void main()
 {
-  integer array[100], var1 , var2 , n, x ,c, d, swap;
-  n = 12;
+  integer array[8], n, c, d, swap;
+  d = 14;
+  n = -d + 20 + 2;
+  for (c = 0; c < n; c = c + 1){
+     input( array[c] );
+  }
+  
+  output("hello world\n");
+  integer count;
+  count = 4;
+
   for (c = 0 ; c < n - 1; c = c + 1)
   {
-  	if (var1 < var2){
-  	 c = 2;
-  	 if(var2 < c ){
-  	  c = 67;
-  	 }
-  	}
-  	else{
-  	 var1 = c - var2;
-  	}
+    for (d = 0 ; d < n - c - 1; d = d + 1)
+    {
+      if (array[d] > array[d+1])
+      {
+        swap       = array[d];
+        array[d]   = array[d+1];
+        array[d+1] = swap;
+      }
+    }
   }
-  n = 1;
+  if( 9 > 5 > -2 ){
+  	output( count );
+  }
+  if( 9 >= 9 ){
+  	output( count  + 1);
+  }
+  if( 9 <= 9 ){
+  	output( count  + 2);
+  }
+  if( 9 == 9 ){
+  	output( count + 3 );
+  }
 }
