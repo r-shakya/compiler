@@ -1,0 +1,24 @@
+integer fib(integer  n){
+	if(n <= 1){
+	    send n;
+	}
+	integer a,b,sum;
+	a = call(fib,n-1);
+	b = call(fib,n-2);
+	sum=a+b;
+	send sum;
+}
+
+void main()
+{
+  integer n;
+  
+  output("Enter n:");
+  input( n );
+  
+  integer fibn;
+  fibn = call(fib,n);
+  
+  output("result: ");
+  output(fibn);
+}

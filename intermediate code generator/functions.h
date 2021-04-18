@@ -21,3 +21,50 @@ int id_size[250] ; // for size of array
 int current_num = 0;
 
 int prev_num;
+
+// hhh
+struct icg {
+	char res[15] ;
+	char arg1[15]   ;
+	char arg2[15]   ;
+	char op[15]     ;
+};
+
+
+struct icg icg_instrn[500];
+int instrn_num = 0;
+
+char gl_str[15];
+char ag1[15];
+char ag2[15];
+char rs1[15];
+
+int Isneg = 0; // if expression starts with negation
+int Isbneg = 0; // if expression starts with - ( expression )
+
+char strdata[30][100] ; // for storing string which needs to be printed
+int sdnum = 0;  //number of such of string
+
+
+struct fcode {
+	int start;
+	int end;
+};
+
+struct fcode ficg[50];
+
+struct fdata {
+	int s;
+	int param_end;
+	int e;
+};
+
+struct fdata ficgdata[50];
+
+int f_num = 0;
+
+int prev_curr_num = 0;
+
+int func_no = 0;
+
+int param_i = 0;

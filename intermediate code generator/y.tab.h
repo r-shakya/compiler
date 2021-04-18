@@ -64,7 +64,13 @@ extern int yydebug;
     CALL = 270,
     SEND = 271,
     typestr = 272,
-    MAIN = 273
+    MAIN = 273,
+    CSTRING = 274,
+    OUTPUT = 275,
+    INPUT = 276,
+    LE = 277,
+    GE = 278,
+    EE = 279
   };
 #endif
 /* Tokens.  */
@@ -84,6 +90,12 @@ extern int yydebug;
 #define SEND 271
 #define typestr 272
 #define MAIN 273
+#define CSTRING 274
+#define OUTPUT 275
+#define INPUT 276
+#define LE 277
+#define GE 278
+#define EE 279
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
@@ -94,7 +106,7 @@ union YYSTYPE
 	 int  number;
 	 char string[15];
 
-#line 98 "y.tab.h"
+#line 110 "y.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;

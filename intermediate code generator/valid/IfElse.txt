@@ -1,0 +1,14 @@
+void main() {
+    integer a,b,temp,c;
+    a=1;
+    b=2;
+    
+    if(a<b){
+        temp=1;
+    }
+    else{
+        temp=0;
+    }
+    
+    c=temp;
+}

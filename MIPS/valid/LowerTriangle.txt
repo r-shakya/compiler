@@ -1,0 +1,13 @@
+void main(){
+   integer n,m,i,p;
+   output("enter n\n");
+   input( n );
+   m=n;
+   for(i=1;i<=n;i++){
+       for(p=1;p<=m;p++){
+          output("*");
+       }
+       m--;
+       output("\n");
+   }
+}

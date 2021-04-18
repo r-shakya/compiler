@@ -1,11 +1,20 @@
-char c;
-integer a,b,arr1[3];
-
 void main(){
 
-	if(3<4)
-	{
-	    integer var1;
-	    sum=4;
-	}
+    integer n,flag;
+    n=0;
+    
+    //if loop start
+    
+    if(n<3){
+        flag=1;
+    }
+    
+    /*
+    if
+    loop
+    end
+    */
+    
+    n=0;
+    
 }

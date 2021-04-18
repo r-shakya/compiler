@@ -5,6 +5,7 @@
 #include "y.tab.h"
 int lineno = 1;
 void printMSG(char *token_type);
+int IncrNewLine(char *temp);
 void lexer_error(char *message);
 %}
 type "integer"|"float"|"char"
@@ -25,6 +26,9 @@ digit [0-9]
 ">="			{ return GE; }
 "<="			{ return LE; }
 "=="			{ return EE; }
+
+("//")[^"\n"]*["\n"]                      { lineno++; }
+("/*")(.|[\r\n])*("*/")                   { lineno+=IncrNewLine(yytext); }
 
 {letter_}({letter_}|{digit})*    	        {strcpy(yylval.string, yytext); return ID; }
 {digit}+ 		                        {yylval.number= atoi(yytext); return NUM;}
@@ -61,6 +65,22 @@ digit [0-9]
 
 void printMSG(char *token_type){
 	printf("token: %s      token_type: %s     lineno: %d\n", yytext, token_type, lineno);
+}
+
+int IncrNewLine(char *a){
+    
+    int n=0;
+    int i=0;
+    int l=strlen(a);
+    
+    while(i<l){
+        if(a[i]=='\n'){
+            n++;
+        }
+        i++;
+    }
+    
+    return n;
 }
 
 void lexer_error(char *message){

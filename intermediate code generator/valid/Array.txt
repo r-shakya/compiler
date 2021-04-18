@@ -1,0 +1,17 @@
+void main() {
+    integer i,j,temp,t,a[5];
+    
+    for(i=0; i<5; i=i+1){
+        a[i]=i;
+    }
+    
+    
+    if(a[i+1] < a[i]){
+        temp=0;
+    }
+    else{
+        temp=1;
+    }
+    
+    t=temp;
+}

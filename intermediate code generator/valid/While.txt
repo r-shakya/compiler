@@ -1,0 +1,11 @@
+void main() {
+    integer n,i,total,temp;
+    total=0;
+    i=1;
+    
+    while(i<5){
+        total=total+i;
+    }
+    
+    temp=total;
+}
