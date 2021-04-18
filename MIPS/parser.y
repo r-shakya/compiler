@@ -18,7 +18,7 @@ int yydebug=1;
 
 %type <number> NUM
 %type <string> ID CSTRING
-%type <string> VOID expr0 expr expr1 expr2 expr3 expr4
+%type <string> VOID expr0 expr expr1 expr2 expr3 expr4 exprl0 exprl exprl1 exprl2 exprl3 exprl4
 %type <number>  assignexpr logicalexpr
 %type <string> decl funcdecl arraylist typestr IFEL
 
@@ -84,7 +84,7 @@ outputstmt: OUTPUT '(' CSTRING ')'                                           { s
       */    | OUTPUT '(' expr ')'                                                {      sprintf(ag1, "t%d", tnum - 1); addicg(ag1,"","o","i");        }
           ;
           
-inputstmt: INPUT '(' ID ')'                             {    if( !lookup_func_id( temproot1 , $3 ) ){ printf("%s is not defined" , $3);  exit(0); }       sprintf(ag1, "id%d", current_num); addicg(ag1,"","i","i");     }
+inputstmt: INPUT '(' ID ')'                             {    if( !lookup_for_id( temproot1 , $3 ) ){ printf("%s is not defined" , $3);  exit(0); }       sprintf(ag1, "id%d", current_num); addicg(ag1,"","i","i");     }
 	    | INPUT '(' ID '[' expr ']' ')'              {     if( !lookup_right_array_id( temproot1 , $3 ) ){ printf("%s is not defined" , $3);  exit(0); }                    sprintf(rs1, "t%d", tnum);    sprintf(ag2, "t%d", tnum-1); addicg("4",ag2,"*",rs1);         tnum++;      sprintf(rs1, "t%d", tnum);    sprintf(ag1, "id%d", current_num); addicg(ag1,"","&",rs1);          tnum++;     sprintf(rs1, "t%d", tnum);  sprintf(ag1, "t%d", tnum-1);   sprintf(ag2, "t%d", tnum-2); addicg(ag1,ag2,"+",rs1);         tnum++;   /*   sprintf(rs1, "t%d", tnum);    sprintf(ag1, "t%d", tnum-1); addicg(ag1,"","b",rs1);            printf("t%d = *t%d\n", tnum,tnum-1); tnum++; */  sprintf(ag1, "t%d", tnum - 1); addicg(ag1,"","i","a");        }
           ;
 
@@ -134,6 +134,32 @@ expr4: NUM                     { if(Isneg == 1){ $1 = -$1; Isneg = 0; }  sprintf
 
 
 
+exprl:  exprl0			{  }
+    | '-' { Isneg = 1; }exprl0                {  }
+    ;
+
+
+exprl0: exprl {expression[e_num] = tnum - 1; e_num++; }   '+' exprl1           { e_num--;  sprintf(rs1, "t%d", tnum);    sprintf(ag1, "t%d", expression[e_num]); sprintf(ag2, "t%d", tnum - 1 ); addicg(ag1,ag2,"+",rs1);      tnum++;  }
+    | exprl1                    { }
+    ;
+
+exprl1: exprl1 {expression[e_num] = tnum - 1; e_num++; } '-' exprl2         { e_num--;  sprintf(rs1, "t%d", tnum);    sprintf(ag1, "t%d", expression[e_num]); sprintf(ag2, "t%d", tnum - 1 ); addicg(ag1,ag2,"-",rs1);      tnum++; }
+    | exprl2                    {  }
+    ;
+    
+exprl2: exprl2 {expression[e_num] = tnum - 1; e_num++; } '*' exprl3         {  e_num--;  sprintf(rs1, "t%d", tnum);    sprintf(ag1, "t%d", expression[e_num]); sprintf(ag2, "t%d", tnum - 1 ); addicg(ag1,ag2,"*",rs1);      tnum++;  }
+    | exprl3                    {  }
+    ;
+    
+exprl3: exprl3 {expression[e_num] = tnum - 1; e_num++; } '/' exprl4         { e_num--;  sprintf(rs1, "t%d", tnum);    sprintf(ag1, "t%d", expression[e_num]); sprintf(ag2, "t%d", tnum - 1 ); addicg(ag1,ag2,"/",rs1);      tnum++; }
+    | exprl4                    {  }
+    ;
+
+
+exprl4: NUM                     {  sprintf(rs1, "t%d", tnum);    sprintf(ag1, "%d", $1); addicg(ag1,"","",rs1); tnum++; }
+    | ID                       {  strcpy($$,$1);  if( !lookup_for_id( temproot1 , $1 ) ){ printf("%s is not defined" , $1);  exit(0); }   sprintf(rs1, "t%d", tnum);    sprintf(ag1, "id%d", current_num); addicg(ag1,"","",rs1);       tnum++;     }
+    |  ID '[' expr ']'           {  if( !lookup_array_id( temproot1 , $1 ) ){ printf("%s is not defined" , $1);  exit(0); }                    sprintf(rs1, "t%d", tnum);    sprintf(ag2, "t%d", tnum-1); addicg("4",ag2,"*",rs1);         tnum++;      sprintf(rs1, "t%d", tnum);    sprintf(ag1, "id%d", current_num); addicg(ag1,"","&",rs1);          tnum++;     sprintf(rs1, "t%d", tnum);  sprintf(ag1, "t%d", tnum-1);   sprintf(ag2, "t%d", tnum-2); addicg(ag1,ag2,"+",rs1);         tnum++;     sprintf(rs1, "t%d", tnum);    sprintf(ag1, "t%d", tnum-1); addicg(ag1,"","b",rs1);     tnum++;         }
+    ;
 
 
 
@@ -143,7 +169,7 @@ expr4: NUM                     { if(Isneg == 1){ $1 = -$1; Isneg = 0; }  sprintf
 
 logicalexpr: /*NUM                      { sprintf(rs1, "t%d", tnum);    sprintf(ag1, "%d", $1); addicg(ag1,"","",rs1);  printf("t%d = %d\n",tnum,$1); $$=tnum; tnum++; }
     | ID                              {  $$=tnum;  if( !lookup_for_id( temproot1 , $1 ) ){ printf("%s is not defined" , $1);  exit(0); }  sprintf(rs1, "t%d", tnum);    sprintf(ag1, "id%d", current_num); addicg(ag1,"","",rs1);      printf("t%d = id%d\n",tnum, current_num ); tnum++; } */
-    expr    { $$=tnum-1; } 
+    exprl    { $$=tnum-1; } 
     | ID '[' expr ']'                  { if( !lookup_for_id( temproot1 , $1 ) ){ printf("%s is not defined" , $1);  exit(0); }  sprintf(rs1, "t%d", tnum);    sprintf(ag2, "t%d", tnum-1); addicg("4",ag2,"*",rs1);       tnum++;     sprintf(rs1, "t%d", tnum);    sprintf(ag1, "id%d", current_num); addicg(ag1,"","&",rs1);       tnum++;        sprintf(rs1, "t%d", tnum);  sprintf(ag1, "t%d", tnum-1);   sprintf(ag2, "t%d", tnum-2); addicg(ag1,ag2,"+",rs1); tnum++;      sprintf(rs1, "t%d", tnum);    sprintf(ag1, "t%d", tnum-1); addicg(ag1,"","b",rs1);         $$=tnum; tnum++;  }
     | logicalexpr '<' logicalexpr     {        sprintf(rs1, "t%d", tnum);  sprintf(ag1, "t%d", $1);   sprintf(ag2, "t%d", $3 ); addicg(ag1,ag2,"<",rs1);                                       tnum++; /*printf("t%d = t%d < t%d\n",tnum,tnum-2,tnum-1); tnum++;*/ }
     | logicalexpr '>' logicalexpr     {        sprintf(rs1, "t%d", tnum);  sprintf(ag1, "t%d", $1);   sprintf(ag2, "t%d", $3 ); addicg(ag1,ag2,">",rs1);                                        tnum++; /*printf("t%d = t%d > t%d\n",tnum,tnum-2,tnum-1); tnum++;*/ }

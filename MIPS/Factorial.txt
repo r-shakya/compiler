@@ -1,0 +1,28 @@
+
+integer factorial(integer  n){
+	integer one;
+	one = 1;
+	if(n <= 0){
+		send one;
+	}
+	integer factn;
+	integer new_n;
+	new_n = n - 1;
+	factn = call(factorial,new_n);
+	factn = n*factn;
+	send factn;
+}
+
+void main()
+{
+  integer n;
+  output("Enter Val :");
+  input( n );
+  integer factn;
+  factn = call(factorial,n);
+  output("Val of Fact(");
+  output(n);
+  output(") : ");
+  output(factn);
+  output("\n");
+}

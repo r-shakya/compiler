@@ -1,0 +1,18 @@
+void main() {
+    integer n,i,total;
+    total=0;
+    output("enter n\n");
+    input(n);
+    //for loop start
+    for(i=n; i>=1; i=i-1){
+        total=total+i;
+    }
+    /*
+    for
+    loop
+    end
+    */
+    
+    output("sum:");
+    output(total);
+}

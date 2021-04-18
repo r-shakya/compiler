@@ -174,7 +174,7 @@ struct data_node* symbol_copy(char *idname , char *idvalue , char *idtype){
     //symbol->ID_Value = idvalue; 
     
     if(idtype != ""){
-    printf( "  idname =    %s   , idvalue  =   %s     ,idtype   =  %s  \n ",idname , idvalue , idtype );
+    //printf( "  idname =    %s   , idvalue  =   %s     ,idtype   =  %s  \n ",idname , idvalue , idtype );
     	symbol->ID_num = id_num;
     	addid(idtype);
     	

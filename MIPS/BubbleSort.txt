@@ -1,0 +1,26 @@
+
+
+void main()
+{
+  integer array[8], n, c, d, swap;
+  n = 8;
+  for (c = 0; c < n; c = c + 1){
+     input( array[c] );
+  }
+  for (c = 0 ; c < n - 1; c = c + 1)
+  {
+    for (d = 0 ; d < n - c - 1; d = d + 1)
+    {
+      if (array[d] > array[d+1])
+      {
+        swap       = array[d];
+        array[d]   = array[d+1];
+        array[d+1] = swap;
+      }
+    }
+  }
+  for (c = 0; c < n; c = c + 1){
+     output( array[c] );
+     output("   ");
+  }
+}
