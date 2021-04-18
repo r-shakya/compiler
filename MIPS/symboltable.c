@@ -907,7 +907,7 @@ void icg_to_mips_for_func(int strt , int j , int fno){
 			printf( "beq $t%d , $zero , %s \n",tv[num_a1] , r );
 		}
 		else if( strcmp(o,"jal") == 0  ){
-			store_registers(fno);
+			
 			printf( "jal %s \n",r1 );
 			recover_registers(fno);
 		}
@@ -921,6 +921,11 @@ void icg_to_mips_for_func(int strt , int j , int fno){
 		}
 		else if( strcmp(o,"param") == 0  ){
 			printf("lw %s , %s\n",r , r1);
+		}
+		else if( strcmp(o,"storereg") == 0  ){
+			int function_number;
+    			sscanf( r1 ,"%d", &function_number );
+    			store_registers(function_number);
 		}
 		else if( strcmp(o,"loadparam") == 0  ){
 			int function_number;
