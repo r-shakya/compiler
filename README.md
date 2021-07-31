@@ -1,5 +1,5 @@
-#compiler
-##introduction
+# compiler
+## introduction
 - As part of our Compiler design Laboratory Course we have developed
 a fully functional Compiler which takes .txt file as input and gives
 assembly( .s ) file as output.
